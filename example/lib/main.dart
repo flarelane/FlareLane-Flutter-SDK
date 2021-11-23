@@ -28,7 +28,7 @@ class _MyAppState extends State<MyApp> {
     if (!mounted) return;
     await FlareLane.shared.setLogLevel(5);
 
-    await FlareLane.shared.initialize('b9aa419c-f034-4861-8fb7-d1c0b7c3ecf8');
+    await FlareLane.shared.initialize('INPUT_YOUR_PROJECT_ID');
 
     FlareLane.shared.setNotificationConvertedHandler((notification) {
       setState(() {

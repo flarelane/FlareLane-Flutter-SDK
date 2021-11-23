@@ -65,10 +65,8 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
   
   func initialize (projectId: String) {
     let launchOptions = self.launchOptions
-
     FlareLane.setSdkType(sdkType: .flutter)
     FlareLane.initWithLaunchOptions(launchOptions, projectId: projectId)
-    
     self.launchOptions = nil
   }
   
@@ -95,7 +93,7 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
   func setNotificationConvertedHandler() {
     FlareLane.setNotificationConvertedHandler() { payload in
       DispatchQueue.main.async {
-        SwiftFlareLaneFlutterPlugin.channel?.invokeMethod("setNotificationConvertedHandler", arguments: payload.toDictionary())
+        SwiftFlareLaneFlutterPlugin.channel?.invokeMethod("setNotificationConvertedHandlerInvokeCallback", arguments: payload.toDictionary())
       }
     }
   }
@@ -105,9 +103,7 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
   // it has the same effect as getting the remoteNotification of launchOptions.
   public func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) -> Bool {
     let launchOptions = [UIApplication.LaunchOptionsKey.remoteNotification: userInfo] as [UIApplication.LaunchOptionsKey: Any]
-    
     self.launchOptions = launchOptions
-    
     return true
   }
 }

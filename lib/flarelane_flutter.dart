@@ -52,7 +52,7 @@ class FlareLane {
   }
 
   Future<Null> _handleMethod(MethodCall call) async {
-    if (call.method == 'setNotificationConvertedHandler' &&
+    if (call.method == 'setNotificationConvertedHandlerInvokeCallback' &&
         _notificationConvertedHandler != null) {
       FlareLaneNotification notification =
           FlareLaneNotification(call.arguments.cast<String, dynamic>());
