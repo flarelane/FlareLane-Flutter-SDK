@@ -30,7 +30,7 @@ class FlareLane {
     await _channel.invokeMethod('setLogLevel', logLevel);
   }
 
-  Future<void> setUserId(String userId) async {
+  Future<void> setUserId(String? userId) async {
     await _channel.invokeMethod('setUserId', userId);
   }
 
