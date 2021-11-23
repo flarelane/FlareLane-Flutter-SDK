@@ -7,6 +7,8 @@ void main() {
   runApp(const MyApp());
 }
 
+const tags = {"age": 27, "gender": 'men'};
+
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -17,6 +19,9 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   String _resState = '';
   String _convertedMessage = '';
+  bool _isSetUserId = false;
+  bool _isSubscribed = false;
+  bool _isSetTags = false;
 
   @override
   void initState() {
@@ -38,8 +43,29 @@ class _MyAppState extends State<MyApp> {
     });
 
     setState(() {
-      _resState = 'FlareLane initialized';
+      _resState = 'FlareLane initialized.';
     });
+  }
+
+  Future<void> toggleUserId() async {
+    await FlareLane.shared
+        .setUserId(_isSetUserId ? null : "myuser@flarelane.com");
+    _isSetUserId = !_isSetUserId;
+  }
+
+  Future<void> toggleIsSubscribed() async {
+    await FlareLane.shared.setIsSubscribed(_isSubscribed);
+    _isSubscribed = !_isSubscribed;
+  }
+
+  Future<void> toggleTags() async {
+    if (!_isSetTags) {
+      await FlareLane.shared.setTags(tags);
+      _isSetTags = true;
+    } else {
+      await FlareLane.shared.deleteTags(tags.keys.toList());
+      _isSetTags = false;
+    }
   }
 
   @override
@@ -49,8 +75,18 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('FlareLane Example App'),
         ),
-        body: Center(
-          child: Text('$_resState\n\n$_convertedMessage'),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Center(child: Text('$_resState\n\n$_convertedMessage')),
+            OutlinedButton(
+                onPressed: toggleUserId, child: const Text("TOGGLE USER ID")),
+            OutlinedButton(
+                onPressed: toggleIsSubscribed,
+                child: const Text("TOGGLE IS SUBSCRIBED")),
+            OutlinedButton(
+                onPressed: toggleTags, child: const Text("TOGGLE TAGS"))
+          ],
         ),
       ),
     );

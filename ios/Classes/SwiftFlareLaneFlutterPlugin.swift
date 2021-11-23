@@ -33,7 +33,7 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
       self.setLogLevel(logLevel: logLevel)
       result(true)
     } else if (method == "setUserId") {
-      let userId = call.arguments as! String
+      let userId = call.arguments as? String
       self.setUserId(userId: userId)
       result(true)
     } else if (method == "setTags") {
@@ -72,7 +72,7 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
   
   // ----- SET DEVICE META DATA -----
   
-  func setUserId(userId: String) {
+  func setUserId(userId: String?) {
     FlareLane.setUserId(userId: userId)
   }
   
