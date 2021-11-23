@@ -1,0 +1,22 @@
+PODS:
+  - flarelane_flutter (0.0.1):
+    - Flutter
+  - Flutter (1.0.0)
+
+DEPENDENCIES:
+  - flarelane_flutter (from `.symlinks/plugins/flarelane_flutter/ios`)
+  - Flutter (from `Flutter`)
+
+EXTERNAL SOURCES:
+  flarelane_flutter:
+    :path: ".symlinks/plugins/flarelane_flutter/ios"
+  Flutter:
+    :path: Flutter
+
+SPEC CHECKSUMS:
+  flarelane_flutter: 2f0afce80b37ef96bf6d83df536644e7592ca827
+  Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
+
+PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
+
+COCOAPODS: 1.11.2
