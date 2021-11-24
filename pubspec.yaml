@@ -1,7 +1,7 @@
 name: flarelane_flutter
 description: FlareLane Flutter SDK
-version: 1.0.0
-homepage:
+version: 0.0.2
+homepage: https://flarelane.com
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
