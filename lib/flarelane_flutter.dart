@@ -1,7 +1,7 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flarelane_flutter/notification.dart';
-import 'package:flarelane_flutter/utils.dart';
 import 'package:flutter/services.dart';
 
 typedef NotificationConvertedHandler = void Function(
@@ -31,7 +31,7 @@ class FlareLane {
   }
 
   Future<void> setLogLevel(LogLevel logLevel) async {
-    await _channel.invokeMethod('setLogLevel', convertLoglevel(logLevel));
+    await _channel.invokeMethod('setLogLevel', _convertLoglevel(logLevel));
   }
 
   Future<void> setUserId(String? userId) async {
@@ -63,4 +63,18 @@ class FlareLane {
       _notificationConvertedHandler!(notification);
     }
   }
+
+  int _convertLoglevel(LogLevel logLevel) {
+    const iOSLogLevel = {LogLevel.none: 0, LogLevel.error: 1, LogLevel.verbose: 5};
+    const androidLogLevel = {LogLevel.none: 10, LogLevel.error: 6, LogLevel.verbose: 2};
+
+    if (Platform.isIOS) {
+      return iOSLogLevel[logLevel] ?? iOSLogLevel[LogLevel.verbose]!;
+    } else if (Platform.isAndroid) {
+      return androidLogLevel[logLevel] ?? androidLogLevel[LogLevel.verbose]!;
+    } else {
+      throw "Unknown Platform";
+    }
+  }
 }
+
