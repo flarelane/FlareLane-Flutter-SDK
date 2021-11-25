@@ -3,13 +3,18 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 
 import 'notification.dart';
+import 'utils.dart';
 
-typedef void NotificationConvertedHandler(FlareLaneNotification notification);
+typedef NotificationConvertedHandler = void Function(
+    FlareLaneNotification notification);
+
+enum LogLevel { none, error, verbose }
 
 class FlareLane {
-  static FlareLane shared = new FlareLane();
+  static FlareLane shared = FlareLane();
 
-  final MethodChannel _channel = MethodChannel('com.flarelane.flutter/methods');
+  final MethodChannel _channel =
+      const MethodChannel('com.flarelane.flutter/methods');
 
   NotificationConvertedHandler? _notificationConvertedHandler;
 
@@ -26,8 +31,8 @@ class FlareLane {
         : print('[FlareLane] initialize failed.');
   }
 
-  Future<void> setLogLevel(int logLevel) async {
-    await _channel.invokeMethod('setLogLevel', logLevel);
+  Future<void> setLogLevel(LogLevel logLevel) async {
+    await _channel.invokeMethod('setLogLevel', convertLoglevel(logLevel));
   }
 
   Future<void> setUserId(String? userId) async {
