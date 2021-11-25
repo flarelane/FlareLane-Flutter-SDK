@@ -1,9 +1,8 @@
 import 'dart:async';
 
+import 'package:flarelane_flutter/notification.dart';
+import 'package:flarelane_flutter/utils.dart';
 import 'package:flutter/services.dart';
-
-import 'notification.dart';
-import 'utils.dart';
 
 typedef NotificationConvertedHandler = void Function(
     FlareLaneNotification notification);

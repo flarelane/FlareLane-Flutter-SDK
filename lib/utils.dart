@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'flarelane_flutter.dart';
+import 'package:flarelane_flutter/flarelane_flutter.dart';
 
 const iOSLogLevel = {0: 0, 1: 1, 2: 5};
 
