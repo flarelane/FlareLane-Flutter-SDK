@@ -31,7 +31,7 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> initFlareLane() async {
     if (!mounted) return;
-    await FlareLane.shared.setLogLevel(5);
+    await FlareLane.shared.setLogLevel(LogLevel.verbose);
 
     await FlareLane.shared.initialize('INPUT_YOUR_PROJECT_ID');
 

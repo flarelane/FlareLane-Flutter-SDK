@@ -49,6 +49,8 @@ public class FlareLaneFlutterPlugin implements FlutterPlugin, MethodCallHandler 
         FlareLane.initWithContext(mContext, projectId);
         result.success(true);
       } else if (call.method.equals("setLogLevel")) {
+        final int intLogLevel = call.arguments();
+        FlareLane.setLogLevel(intLogLevel);
         result.success(true);
       } else if (call.method.equals("setUserId")) {
         final String userId = call.arguments();
