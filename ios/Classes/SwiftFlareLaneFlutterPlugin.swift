@@ -17,6 +17,8 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
     registrar.addMethodCallDelegate(instance, channel: channel)
     // Register appDelegate
     registrar.addApplicationDelegate(instance)
+    
+    FlareLane.setSdkInfo(sdkType: .flutter, sdkVersion: "1.0.1")
   }
   
   // ----- FLUTTER INVOKE HANDLER -----
@@ -65,7 +67,6 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
   
   func initialize (projectId: String) {
     let launchOptions = self.launchOptions
-    FlareLane.setSdkType(sdkType: .flutter)
     FlareLane.initWithLaunchOptions(launchOptions, projectId: projectId)
     self.launchOptions = nil
   }
