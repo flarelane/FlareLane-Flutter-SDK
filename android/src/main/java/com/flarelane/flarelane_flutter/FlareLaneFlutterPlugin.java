@@ -38,7 +38,9 @@ public class FlareLaneFlutterPlugin implements FlutterPlugin, MethodCallHandler 
     mContext = flutterPluginBinding.getApplicationContext();
     channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "com.flarelane.flutter/methods");
     channel.setMethodCallHandler(this);
-    FlareLane.sdkType = SdkType.FLUTTER;
+
+    FlareLane.SdkInfo.type = SdkType.FLUTTER;
+    FlareLane.SdkInfo.version = "1.0.1";
   }
 
   @Override
