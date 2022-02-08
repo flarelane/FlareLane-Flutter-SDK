@@ -6,26 +6,26 @@ import FlareLane
 public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
   var launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   static var channel: FlutterMethodChannel?
-  
+
   public static func register(with registrar: FlutterPluginRegistrar) {
     let channel = FlutterMethodChannel(name: "com.flarelane.flutter/methods", binaryMessenger: registrar.messenger())
     // To use channel in pulic methods
     SwiftFlareLaneFlutterPlugin.channel = channel
-    
+
     let instance = SwiftFlareLaneFlutterPlugin()
     // Register flutter invoke
     registrar.addMethodCallDelegate(instance, channel: channel)
     // Register appDelegate
     registrar.addApplicationDelegate(instance)
-    
-    FlareLane.setSdkInfo(sdkType: .flutter, sdkVersion: "1.0.1")
+
+    FlareLane.setSdkInfo(sdkType: .flutter, sdkVersion: "1.0.2")
   }
-  
+
   // ----- FLUTTER INVOKE HANDLER -----
-  
+
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     let method = call.method
-    
+
     if (method == "initialize") {
       let projectId = call.arguments as! String
       self.initialize(projectId: projectId)
@@ -57,40 +57,40 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
       result(false)
     }
   }
-  
+
   // ----- PUBLIC METHODS -----
-  
+
   func setLogLevel (logLevel: Int) {
     let level = LogLevel(rawValue: logLevel) ?? LogLevel.verbose
     FlareLane.setLogLevel(level: level)
   }
-  
+
   func initialize (projectId: String) {
     let launchOptions = self.launchOptions
     FlareLane.initWithLaunchOptions(launchOptions, projectId: projectId)
     self.launchOptions = nil
   }
-  
+
   // ----- SET DEVICE META DATA -----
-  
+
   func setUserId(userId: String?) {
     FlareLane.setUserId(userId: userId)
   }
-  
+
   func setTags(tags: [String: Any]) {
     FlareLane.setTags(tags: tags)
   }
-  
+
   func deleteTags(keys: [String]) {
     FlareLane.deleteTags(keys: keys)
   }
-  
+
   func setIsSubscribed(isSubscribed: Bool) {
     FlareLane.setIsSubscribed(isSubscribed: isSubscribed)
   }
-  
+
   // ----- HANDLERS -----
-  
+
   func setNotificationConvertedHandler() {
     FlareLane.setNotificationConvertedHandler() { payload in
       DispatchQueue.main.async {
@@ -98,7 +98,7 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
       }
     }
   }
-  
+
   // When App is killed, "didReceiveRemoteNotification" has priority before "NotificationCenter" is registered.
   // When the app is initialized and the native module is called(before "NotificationCenter" is registered),
   // it has the same effect as getting the remoteNotification of launchOptions.
