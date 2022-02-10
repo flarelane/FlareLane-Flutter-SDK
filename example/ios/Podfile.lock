@@ -21,7 +21,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   FlareLane: e2bfb1cda48f5e0c39d29af0081fd68daaf72942
-  flarelane_flutter: 20814fbdba1d4192f1b9a02df6990c2448f57006
+  flarelane_flutter: 3b5c13947f1c3962d5ddf87fe64ccfdb7bfe6621
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
 
 PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
