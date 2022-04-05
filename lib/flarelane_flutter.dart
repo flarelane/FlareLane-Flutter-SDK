@@ -50,6 +50,12 @@ class FlareLane {
     await _channel.invokeMethod('setIsSubscribed', isSubscribed);
   }
 
+   Future<void> setAccentColor(String accentColor) async {
+     if (Platform.isAndroid) {
+       await _channel.invokeMethod('setAccentColor', accentColor);
+     }
+  }
+
   void setNotificationConvertedHandler(NotificationConvertedHandler handler) {
     _notificationConvertedHandler = handler;
     _channel.invokeMethod("setNotificationConvertedHandler");

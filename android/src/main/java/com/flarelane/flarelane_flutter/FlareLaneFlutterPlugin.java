@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import com.flarelane.FlareLane;
 import com.flarelane.Notification;
 import com.flarelane.NotificationConvertedHandler;
+import com.flarelane.NotificationManager;
 import com.flarelane.SdkType;
 
 import org.json.JSONObject;
@@ -40,7 +41,7 @@ public class FlareLaneFlutterPlugin implements FlutterPlugin, MethodCallHandler 
     channel.setMethodCallHandler(this);
 
     FlareLane.SdkInfo.type = SdkType.FLUTTER;
-    FlareLane.SdkInfo.version = "1.0.2";
+    FlareLane.SdkInfo.version = "1.0.3";
   }
 
   @Override
@@ -71,6 +72,10 @@ public class FlareLaneFlutterPlugin implements FlutterPlugin, MethodCallHandler 
         final Boolean isSubscribed = call.arguments();
         FlareLane.setIsSubscribed(mContext, isSubscribed);
         result.success(true);
+      } else if (call.method.equals("setAccentColor")) {
+        final String accentColor = call.arguments();
+        NotificationManager.accentColor = accentColor;
+        result.success(true);
       } else if (call.method.equals("setNotificationConvertedHandler")) {
         FlareLane.setNotificationConvertedHandler(new NotificationConvertedHandler() {
 
@@ -81,6 +86,7 @@ public class FlareLaneFlutterPlugin implements FlutterPlugin, MethodCallHandler 
             hash.put("title", notification.title);
             hash.put("body", notification.body);
             hash.put("url", notification.url);
+            hash.put("imageUrl", notification.imageUrl);
 
             invokeMethodOnUiThread("setNotificationConvertedHandlerInvokeCallback", hash);
           }
