@@ -38,7 +38,7 @@ class _MyAppState extends State<MyApp> {
     FlareLane.shared.setNotificationConvertedHandler((notification) {
       setState(() {
         _convertedMessage =
-            '✅ Activated convertedHandler\nid: ${notification.id}\ntitle: ${notification.title}\nbody: ${notification.body}\nurl: ${notification.url}';
+            '✅ Activated convertedHandler\n${notification.toString()}';
       });
     });
 
