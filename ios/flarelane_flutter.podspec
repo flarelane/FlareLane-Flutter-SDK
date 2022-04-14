@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'flarelane_flutter'
-  s.version          = '1.0.2'
+  s.version          = '1.0.4'
   s.summary          = 'FlareLane Flutter SDK'
   s.description      = <<-DESC
 FlareLane Flutter SDK
@@ -17,7 +17,7 @@ FlareLane Flutter SDK
   s.dependency 'Flutter'
   s.platform = :ios, '11.0'
 
-  s.dependency "FlareLane", '1.0.5'
+  s.dependency "FlareLane", '1.0.6'
 
   # Flutter.framework does not contain a i386 slice.
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }
