@@ -1,3 +1,7 @@
+## 1.0.4
+
+- Update Native iOS SDK (1.0.6)
+
 ## 1.0.3
 
 - Update Native Android SDK (1.0.13)
