@@ -18,7 +18,7 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
     // Register appDelegate
     registrar.addApplicationDelegate(instance)
 
-    FlareLane.setSdkInfo(sdkType: .flutter, sdkVersion: "1.0.4")
+    FlareLane.setSdkInfo(sdkType: .flutter, sdkVersion: "1.0.5")
   }
 
   // ----- FLUTTER INVOKE HANDLER -----
@@ -93,8 +93,17 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
 
   func setNotificationConvertedHandler() {
     FlareLane.setNotificationConvertedHandler() { payload in
+      let notificationDictionary: [String: Optional<Any>] = [
+        "id": payload.id,
+        "title": payload.title,
+        "body": payload.body,
+        "url": payload.url,
+        "imageUrl": payload.imageUrl,
+        "data": payload.data
+      ]
+
       DispatchQueue.main.async {
-        SwiftFlareLaneFlutterPlugin.channel?.invokeMethod("setNotificationConvertedHandlerInvokeCallback", arguments: payload.toDictionary())
+        SwiftFlareLaneFlutterPlugin.channel?.invokeMethod("setNotificationConvertedHandlerInvokeCallback", arguments: notificationDictionary)
       }
     }
   }

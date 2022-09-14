@@ -1,3 +1,9 @@
+## 1.0.5
+
+- Add a data field to notification class
+- Update Native Android SDK (1.0.14)
+- Update Native Android SDK (1.0.7)
+
 ## 1.0.4
 
 - Update Native iOS SDK (1.0.6)

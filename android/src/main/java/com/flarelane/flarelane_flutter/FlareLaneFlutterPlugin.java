@@ -41,7 +41,7 @@ public class FlareLaneFlutterPlugin implements FlutterPlugin, MethodCallHandler 
     channel.setMethodCallHandler(this);
 
     FlareLane.SdkInfo.type = SdkType.FLUTTER;
-    FlareLane.SdkInfo.version = "1.0.4";
+    FlareLane.SdkInfo.version = "1.0.5";
   }
 
   @Override
@@ -87,6 +87,7 @@ public class FlareLaneFlutterPlugin implements FlutterPlugin, MethodCallHandler 
             hash.put("body", notification.body);
             hash.put("url", notification.url);
             hash.put("imageUrl", notification.imageUrl);
+            hash.put("data", notification.data);
 
             invokeMethodOnUiThread("setNotificationConvertedHandlerInvokeCallback", hash);
           }
