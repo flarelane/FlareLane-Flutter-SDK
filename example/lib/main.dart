@@ -68,6 +68,10 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  Future<void> getDeviceId() async {
+    print(await FlareLane.shared.getDeviceId());
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -85,7 +89,9 @@ class _MyAppState extends State<MyApp> {
                 onPressed: toggleIsSubscribed,
                 child: const Text("TOGGLE IS SUBSCRIBED")),
             OutlinedButton(
-                onPressed: toggleTags, child: const Text("TOGGLE TAGS"))
+                onPressed: toggleTags, child: const Text("TOGGLE TAGS")),
+            OutlinedButton(
+                onPressed: getDeviceId, child: const Text("TOGGLE TAGS"))
           ],
         ),
       ),

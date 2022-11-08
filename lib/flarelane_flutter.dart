@@ -50,10 +50,10 @@ class FlareLane {
     await _channel.invokeMethod('setIsSubscribed', isSubscribed);
   }
 
-   Future<void> setAccentColor(String accentColor) async {
-     if (Platform.isAndroid) {
-       await _channel.invokeMethod('setAccentColor', accentColor);
-     }
+  Future<void> setAccentColor(String accentColor) async {
+    if (Platform.isAndroid) {
+      await _channel.invokeMethod('setAccentColor', accentColor);
+    }
   }
 
   void setNotificationConvertedHandler(NotificationConvertedHandler handler) {
@@ -61,7 +61,12 @@ class FlareLane {
     _channel.invokeMethod("setNotificationConvertedHandler");
   }
 
-  Future<Null> _handleMethod(MethodCall call) async {
+  Future<String?> getDeviceId() async {
+    final String? deviceId = await _channel.invokeMethod('getDeviceId');
+    return deviceId;
+  }
+
+  Future _handleMethod(MethodCall call) async {
     if (call.method == 'setNotificationConvertedHandlerInvokeCallback' &&
         _notificationConvertedHandler != null) {
       FlareLaneNotification notification =
@@ -71,8 +76,16 @@ class FlareLane {
   }
 
   int _convertLoglevel(LogLevel logLevel) {
-    const iOSLogLevel = {LogLevel.none: 0, LogLevel.error: 1, LogLevel.verbose: 5};
-    const androidLogLevel = {LogLevel.none: 10, LogLevel.error: 6, LogLevel.verbose: 2};
+    const iOSLogLevel = {
+      LogLevel.none: 0,
+      LogLevel.error: 1,
+      LogLevel.verbose: 5
+    };
+    const androidLogLevel = {
+      LogLevel.none: 10,
+      LogLevel.error: 6,
+      LogLevel.verbose: 2
+    };
 
     if (Platform.isIOS) {
       return iOSLogLevel[logLevel] ?? iOSLogLevel[LogLevel.verbose]!;
@@ -83,4 +96,3 @@ class FlareLane {
     }
   }
 }
-
