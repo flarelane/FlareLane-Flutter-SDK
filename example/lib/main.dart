@@ -33,7 +33,7 @@ class _MyAppState extends State<MyApp> {
     if (!mounted) return;
     await FlareLane.shared.setLogLevel(LogLevel.verbose);
 
-    await FlareLane.shared.initialize('INPUT_YOUR_PROJECT_ID');
+    await FlareLane.shared.initialize('a43cdc82-0ea5-4fdd-aebc-1940fe99b6c3');
 
     FlareLane.shared.setNotificationConvertedHandler((notification) {
       setState(() {
@@ -91,7 +91,7 @@ class _MyAppState extends State<MyApp> {
             OutlinedButton(
                 onPressed: toggleTags, child: const Text("TOGGLE TAGS")),
             OutlinedButton(
-                onPressed: getDeviceId, child: const Text("TOGGLE TAGS"))
+                onPressed: getDeviceId, child: const Text("PRINT DEVICE ID"))
           ],
         ),
       ),

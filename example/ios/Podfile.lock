@@ -1,6 +1,6 @@
 PODS:
   - FlareLane (1.0.8)
-  - flarelane_flutter (1.0.5):
+  - flarelane_flutter (1.0.6):
     - FlareLane (= 1.0.8)
     - Flutter
   - Flutter (1.0.0)
@@ -22,9 +22,9 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   FlareLane: 338d6c44a0466f20704a5cb8826f0c8ee20cd7f5
-  flarelane_flutter: 3c44a2df30fc0b06313aff640312a10242c70bfb
+  flarelane_flutter: 728101527a7dab13da5a7cf110aa5bd2f5a4fc1b
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
 
 PODFILE CHECKSUM: 9b9fb70ddcdd0229c1cc0168e397f51273043065
 
-COCOAPODS: 1.11.2
+COCOAPODS: 1.11.3
