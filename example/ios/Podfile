@@ -37,6 +37,7 @@ end
 target 'FlareLaneNotificationServiceExtension' do
   use_frameworks!
   pod 'FlareLane'
+  pod 'OneSignalXCFramework', '>= 3.4.3', '< 4.0'
 end
 
 post_install do |installer|

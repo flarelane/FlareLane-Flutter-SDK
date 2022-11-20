@@ -1,8 +1,13 @@
-## 1.0.6
+## 1.1.0
 
+- Finaaaally, You can use FlareLane with other notification services!
+  - Disable swizzling option (Set FlareLaneSwizzlingEnabled to false in Info.plist)
+  - Need to add some delegate methods
 - New Method: getDeviceId()
-- Update Native Android SDK (1.0.15)
-- Update Native Android SDK (1.0.8)
+- Update Native Android SDK (1.1.0)
+- Update Native Android SDK (1.1.0)
+- Some bug fixes
+  - Multiple creating device
 
 ## 1.0.5
 
