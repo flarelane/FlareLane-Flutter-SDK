@@ -3,10 +3,12 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0407BE0D2929F956004BC2C1 /* OneSignalExtension.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04578B582927A4A700D8EA09 /* OneSignalExtension.xcframework */; };
+		0407BE0E2929F956004BC2C1 /* OneSignalExtension.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 04578B582927A4A700D8EA09 /* OneSignalExtension.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		045966412805914C00F87050 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045966402805914C00F87050 /* NotificationService.swift */; };
 		045966452805914C00F87050 /* FlareLaneNotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 0459663E2805914C00F87050 /* FlareLaneNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		0BDC5F36DCDD323C08101A18 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83A9C441B49FA3C3B18B908D /* Pods_Runner.framework */; };
@@ -30,6 +32,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		0407BE0F2929F956004BC2C1 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				0407BE0E2929F956004BC2C1 /* OneSignalExtension.xcframework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		045966462805914C00F87050 /* Embed App Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -41,19 +54,11 @@
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		9705A1C41CF9048500538489 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		04578B582927A4A700D8EA09 /* OneSignalExtension.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = OneSignalExtension.xcframework; path = Pods/OneSignalXCFramework/iOS_SDK/OneSignalSDK/OneSignal_Extension/OneSignalExtension.xcframework; sourceTree = "<group>"; };
+		04578B5C2927A54200D8EA09 /* OneSignalCore.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = OneSignalCore.xcframework; path = Pods/OneSignalXCFramework/iOS_SDK/OneSignalSDK/OneSignal_Core/OneSignalCore.xcframework; sourceTree = "<group>"; };
 		0459663E2805914C00F87050 /* FlareLaneNotificationServiceExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = FlareLaneNotificationServiceExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		045966402805914C00F87050 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		045966422805914C00F87050 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -63,6 +68,7 @@
 		25577587D95BFE2F53FE88EE /* Pods_FlareLaneNotificationServiceExtension.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FlareLaneNotificationServiceExtension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
 		42EF4EE8274CA96A00045ACD /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
+		642EB84EABD1D8462226967C /* GoogleService-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "Runner/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
@@ -94,6 +100,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0407BE0D2929F956004BC2C1 /* OneSignalExtension.xcframework in Frameworks */,
 				0BDC5F36DCDD323C08101A18 /* Pods_Runner.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -113,6 +120,8 @@
 		5A1CDD5241401AF745641159 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				04578B5C2927A54200D8EA09 /* OneSignalCore.xcframework */,
+				04578B582927A4A700D8EA09 /* OneSignalExtension.xcframework */,
 				25577587D95BFE2F53FE88EE /* Pods_FlareLaneNotificationServiceExtension.framework */,
 				83A9C441B49FA3C3B18B908D /* Pods_Runner.framework */,
 			);
@@ -152,6 +161,7 @@
 				97C146EF1CF9000F007C117D /* Products */,
 				852FC21FB3DE57FAD0C09A1B /* Pods */,
 				5A1CDD5241401AF745641159 /* Frameworks */,
+				642EB84EABD1D8462226967C /* GoogleService-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -210,10 +220,10 @@
 				97C146EA1CF9000F007C117D /* Sources */,
 				97C146EB1CF9000F007C117D /* Frameworks */,
 				97C146EC1CF9000F007C117D /* Resources */,
-				9705A1C41CF9048500538489 /* Embed Frameworks */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
 				045966462805914C00F87050 /* Embed App Extensions */,
 				F040D1D7D9E03983B674CD33 /* [CP] Embed Pods Frameworks */,
+				0407BE0F2929F956004BC2C1 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -232,7 +242,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1330;
-				LastUpgradeCheck = 1020;
+				LastUpgradeCheck = 1300;
 				ORGANIZATIONNAME = "";
 				TargetAttributes = {
 					0459663D2805914C00F87050 = {

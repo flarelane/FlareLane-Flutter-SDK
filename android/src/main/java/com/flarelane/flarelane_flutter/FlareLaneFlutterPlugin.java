@@ -41,7 +41,7 @@ public class FlareLaneFlutterPlugin implements FlutterPlugin, MethodCallHandler 
     channel.setMethodCallHandler(this);
 
     FlareLane.SdkInfo.type = SdkType.FLUTTER;
-    FlareLane.SdkInfo.version = "1.0.5";
+    FlareLane.SdkInfo.version = "1.1.0";
   }
 
   @Override
@@ -94,6 +94,8 @@ public class FlareLaneFlutterPlugin implements FlutterPlugin, MethodCallHandler 
         });
 
         result.success(true);
+      } else if (call.method.equals("getDeviceId")) {
+        result.success(FlareLane.getDeviceId(mContext));
       } else {
         result.notImplemented();
       }

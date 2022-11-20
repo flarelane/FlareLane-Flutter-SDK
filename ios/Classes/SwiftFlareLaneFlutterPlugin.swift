@@ -18,7 +18,7 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
     // Register appDelegate
     registrar.addApplicationDelegate(instance)
 
-    FlareLane.setSdkInfo(sdkType: .flutter, sdkVersion: "1.0.5")
+    FlareLane.setSdkInfo(sdkType: .flutter, sdkVersion: "1.1.0")
   }
 
   // ----- FLUTTER INVOKE HANDLER -----
@@ -53,6 +53,8 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
     } else if (method == "setNotificationConvertedHandler") {
       self.setNotificationConvertedHandler()
       result(true)
+    } else if (method == "getDeviceId") {
+      result(self.getDeviceId())
     } else {
       result(false)
     }
@@ -87,6 +89,12 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
 
   func setIsSubscribed(isSubscribed: Bool) {
     FlareLane.setIsSubscribed(isSubscribed: isSubscribed)
+  }
+
+  // ----- GET DEVICE META DATA -----
+
+  func getDeviceId() -> String? {
+    return FlareLane.getDeviceId()
   }
 
   // ----- HANDLERS -----

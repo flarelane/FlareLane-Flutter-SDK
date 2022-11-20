@@ -1,10 +1,73 @@
 import 'dart:async';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flarelane_flutter/flarelane_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
-void main() {
+import 'firebase_options.dart';
+
+const FLARELANE_PROJECT_ID = 'FLARELANE_PROJECT_ID';
+const ONESIGNAL_PROJECT_ID = "ONESIGNAL_PROJECT_ID";
+
+Future<void> _fcmOnBackgroundMessage(RemoteMessage remoteMessage) async {
+  print('FCM onBackgroundMessage: $remoteMessage');
+}
+
+void _fcmOnMessageHandler(RemoteMessage remoteMessage) {
+  print('FCM onMessage: $remoteMessage');
+}
+
+void _fcmOnMessageOpenedApp(RemoteMessage remoteMessage) {
+  print('FCM onMessageOpenedApp: $remoteMessage');
+}
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  setupFlareLane();
+  setupFCM();
+  setupOS();
   runApp(const MyApp());
+}
+
+void setupFCM() async {
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+  NotificationSettings settings = await messaging.requestPermission(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
+  String? token = await messaging.getToken();
+  print('FCM: token $token');
+  FirebaseMessaging.onMessage.listen(_fcmOnMessageOpenedApp);
+  FirebaseMessaging.onBackgroundMessage(_fcmOnBackgroundMessage);
+  FirebaseMessaging.onMessageOpenedApp.listen(_fcmOnMessageOpenedApp);
+}
+
+void setupOS() async {
+  OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
+  OneSignal.shared.setAppId(ONESIGNAL_PROJECT_ID);
+  OneSignal.shared.promptUserForPushNotificationPermission().then((accepted) {
+    print("OneSignal: Accepted permission: $accepted");
+  });
+  OneSignal.shared.setNotificationWillShowInForegroundHandler(
+      (OSNotificationReceivedEvent event) {
+    print('"OneSignal: setNotificationWillShowInForegroundHandler: ${event}');
+    event.complete(event.notification);
+  });
+  OneSignal.shared
+      .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
+    print('"OneSignal: setNotificationOpenedHandler: ${result}');
+  });
+}
+
+void setupFlareLane() async {
+  await FlareLane.shared.setLogLevel(LogLevel.verbose);
+  await FlareLane.shared.initialize(FLARELANE_PROJECT_ID);
 }
 
 const tags = {"age": 27, "gender": 'men'};
@@ -26,14 +89,6 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    initFlareLane();
-  }
-
-  Future<void> initFlareLane() async {
-    if (!mounted) return;
-    await FlareLane.shared.setLogLevel(LogLevel.verbose);
-
-    await FlareLane.shared.initialize('INPUT_YOUR_PROJECT_ID');
 
     FlareLane.shared.setNotificationConvertedHandler((notification) {
       setState(() {
@@ -68,6 +123,10 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  Future<void> getDeviceId() async {
+    print(await FlareLane.shared.getDeviceId());
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -85,7 +144,9 @@ class _MyAppState extends State<MyApp> {
                 onPressed: toggleIsSubscribed,
                 child: const Text("TOGGLE IS SUBSCRIBED")),
             OutlinedButton(
-                onPressed: toggleTags, child: const Text("TOGGLE TAGS"))
+                onPressed: toggleTags, child: const Text("TOGGLE TAGS")),
+            OutlinedButton(
+                onPressed: getDeviceId, child: const Text("PRINT DEVICE ID"))
           ],
         ),
       ),
