@@ -3,12 +3,10 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0407BE0D2929F956004BC2C1 /* OneSignalExtension.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04578B582927A4A700D8EA09 /* OneSignalExtension.xcframework */; };
-		0407BE0E2929F956004BC2C1 /* OneSignalExtension.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 04578B582927A4A700D8EA09 /* OneSignalExtension.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		045966412805914C00F87050 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045966402805914C00F87050 /* NotificationService.swift */; };
 		045966452805914C00F87050 /* FlareLaneNotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 0459663E2805914C00F87050 /* FlareLaneNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		0BDC5F36DCDD323C08101A18 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83A9C441B49FA3C3B18B908D /* Pods_Runner.framework */; };
@@ -32,17 +30,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		0407BE0F2929F956004BC2C1 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				0407BE0E2929F956004BC2C1 /* OneSignalExtension.xcframework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		045966462805914C00F87050 /* Embed App Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -100,7 +87,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0407BE0D2929F956004BC2C1 /* OneSignalExtension.xcframework in Frameworks */,
 				0BDC5F36DCDD323C08101A18 /* Pods_Runner.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -223,7 +209,6 @@
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
 				045966462805914C00F87050 /* Embed App Extensions */,
 				F040D1D7D9E03983B674CD33 /* [CP] Embed Pods Frameworks */,
-				0407BE0F2929F956004BC2C1 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

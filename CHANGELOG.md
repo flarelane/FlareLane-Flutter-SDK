@@ -1,3 +1,7 @@
+## 1.2.0
+
+- Support Android 13
+
 ## 1.1.0
 
 - Finaaaally, You can use FlareLane with other notification services!
