@@ -66,6 +66,10 @@ class FlareLane {
     return deviceId;
   }
 
+  Future<void> trackEvent(String type, [Map<String, Object>? data]) async {
+    await _channel.invokeMethod('trackEvent', {"type": type, "data": data});
+  }
+
   Future _handleMethod(MethodCall call) async {
     if (call.method == 'setNotificationConvertedHandlerInvokeCallback' &&
         _notificationConvertedHandler != null) {

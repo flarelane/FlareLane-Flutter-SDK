@@ -41,7 +41,7 @@ public class FlareLaneFlutterPlugin implements FlutterPlugin, MethodCallHandler 
     channel.setMethodCallHandler(this);
 
     FlareLane.SdkInfo.type = SdkType.FLUTTER;
-    FlareLane.SdkInfo.version = "1.2.0";
+    FlareLane.SdkInfo.version = "1.3.0";
   }
 
   @Override
@@ -96,6 +96,15 @@ public class FlareLaneFlutterPlugin implements FlutterPlugin, MethodCallHandler 
         result.success(true);
       } else if (call.method.equals("getDeviceId")) {
         result.success(FlareLane.getDeviceId(mContext));
+      } else if (call.method.equals("trackEvent")) {
+        final HashMap<String, Object> args = call.arguments();
+        String type = String.valueOf(args.get("type"));
+        Object _data = args.get("data");
+        HashMap<String, Object> data = _data instanceof HashMap ? (HashMap<String, Object>) _data: null;
+
+        FlareLane.trackEvent(mContext, type, data != null ? new JSONObject(data) : null);
+
+        result.success(true);
       } else {
         result.notImplemented();
       }
