@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flarelane_flutter/flarelane_flutter.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +7,7 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 import 'firebase_options.dart';
 
-const FLARELANE_PROJECT_ID = 'FLARELANE_PROJECT_ID';
+const FLARELANE_PROJECT_ID = 'a43cdc82-0ea5-4fdd-aebc-1940fe99b6c3';
 const ONESIGNAL_PROJECT_ID = "ONESIGNAL_PROJECT_ID";
 
 Future<void> _fcmOnBackgroundMessage(RemoteMessage remoteMessage) async {
@@ -127,6 +126,10 @@ class _MyAppState extends State<MyApp> {
     print(await FlareLane.shared.getDeviceId());
   }
 
+  Future<void> trackEvent() async {
+    await FlareLane.shared.trackEvent("test_event", {"test": "event"});
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -146,7 +149,9 @@ class _MyAppState extends State<MyApp> {
             OutlinedButton(
                 onPressed: toggleTags, child: const Text("TOGGLE TAGS")),
             OutlinedButton(
-                onPressed: getDeviceId, child: const Text("PRINT DEVICE ID"))
+                onPressed: getDeviceId, child: const Text("PRINT DEVICE ID")),
+            OutlinedButton(
+                onPressed: trackEvent, child: const Text("TRACK EVENT"))
           ],
         ),
       ),
