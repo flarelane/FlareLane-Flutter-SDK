@@ -12,26 +12,27 @@ const FLARELANE_PROJECT_ID = 'FLARELANE_PROJECT_ID';
 const ONESIGNAL_PROJECT_ID = "ONESIGNAL_PROJECT_ID";
 
 Future<void> _fcmOnBackgroundMessage(RemoteMessage remoteMessage) async {
-  print('FCM onBackgroundMessage: $remoteMessage');
+  print('FCM onBackgroundMessage: ${remoteMessage.toMap()}');
 }
 
 void _fcmOnMessageHandler(RemoteMessage remoteMessage) {
-  print('FCM onMessage: $remoteMessage');
+  print('FCM onMessage: ${remoteMessage.toMap()}');
 }
 
 void _fcmOnMessageOpenedApp(RemoteMessage remoteMessage) {
-  print('FCM onMessageOpenedApp: $remoteMessage');
+  print('FCM onMessageOpenedApp: ${remoteMessage.toMap()}');
 }
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  setupFlareLane();
-  setupFCM();
-  setupOS();
+  await setupFCM();
+  await setupOS();
+  await setupFlareLane();
+
   runApp(const MyApp());
 }
 
-void setupFCM() async {
+Future<void> setupFCM() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -48,7 +49,7 @@ void setupFCM() async {
   FirebaseMessaging.onMessageOpenedApp.listen(_fcmOnMessageOpenedApp);
 }
 
-void setupOS() async {
+Future<void> setupOS() async {
   OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
   OneSignal.shared.setAppId(ONESIGNAL_PROJECT_ID);
   OneSignal.shared.promptUserForPushNotificationPermission().then((accepted) {
@@ -65,7 +66,7 @@ void setupOS() async {
   });
 }
 
-void setupFlareLane() async {
+Future<void> setupFlareLane() async {
   await FlareLane.shared.setLogLevel(LogLevel.verbose);
   await FlareLane.shared.initialize(FLARELANE_PROJECT_ID);
 }
@@ -127,6 +128,10 @@ class _MyAppState extends State<MyApp> {
     print(await FlareLane.shared.getDeviceId());
   }
 
+  Future<void> trackEvent() async {
+    await FlareLane.shared.trackEvent("test_event", {"test": "event"});
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -146,7 +151,9 @@ class _MyAppState extends State<MyApp> {
             OutlinedButton(
                 onPressed: toggleTags, child: const Text("TOGGLE TAGS")),
             OutlinedButton(
-                onPressed: getDeviceId, child: const Text("PRINT DEVICE ID"))
+                onPressed: getDeviceId, child: const Text("PRINT DEVICE ID")),
+            OutlinedButton(
+                onPressed: trackEvent, child: const Text("TRACK EVENT"))
           ],
         ),
       ),

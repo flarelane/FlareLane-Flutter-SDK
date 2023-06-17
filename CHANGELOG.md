@@ -1,3 +1,7 @@
+## 1.3.0
+
+- Add trackEvent method
+
 ## 1.2.0
 
 - Support Android 13
