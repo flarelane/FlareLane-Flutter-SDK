@@ -18,7 +18,7 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
     // Register appDelegate
     registrar.addApplicationDelegate(instance)
 
-    FlareLane.setSdkInfo(sdkType: .flutter, sdkVersion: "1.2.0")
+    FlareLane.setSdkInfo(sdkType: .flutter, sdkVersion: "1.3.0")
   }
 
   // ----- FLUTTER INVOKE HANDLER -----
@@ -53,9 +53,16 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
     } else if (method == "setNotificationConvertedHandler") {
       self.setNotificationConvertedHandler()
       result(true)
+    } else if (method == "trackEvent") {
+      let arguments = call.arguments as! [String: Any?]
+      let type = arguments["type"] as! String
+      let data = arguments["data"] as? [String: Any]
+      self.trackEvent(type:type, data: data)
+      result(true)
     } else if (method == "getDeviceId") {
       result(self.getDeviceId())
-    } else {
+    } 
+    else {
       result(false)
     }
   }
@@ -89,6 +96,10 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
 
   func setIsSubscribed(isSubscribed: Bool) {
     FlareLane.setIsSubscribed(isSubscribed: isSubscribed)
+  }
+  
+  func trackEvent(type: String, data: [String: Any]?) {
+    FlareLane.trackEvent(type, data: data)
   }
 
   // ----- GET DEVICE META DATA -----
