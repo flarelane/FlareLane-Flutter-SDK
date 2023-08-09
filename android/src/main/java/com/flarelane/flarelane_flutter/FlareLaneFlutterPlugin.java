@@ -41,7 +41,7 @@ public class FlareLaneFlutterPlugin implements FlutterPlugin, MethodCallHandler 
     channel.setMethodCallHandler(this);
 
     FlareLane.SdkInfo.type = SdkType.FLUTTER;
-    FlareLane.SdkInfo.version = "1.3.0";
+    FlareLane.SdkInfo.version = "1.3.1";
   }
 
   @Override
@@ -59,6 +59,17 @@ public class FlareLaneFlutterPlugin implements FlutterPlugin, MethodCallHandler 
         final String userId = call.arguments();
         FlareLane.setUserId(mContext, userId);
         result.success(true);
+      } else if (call.method.equals("getTags")) {
+        FlareLane.getTags(mContext, new FlareLane.GetTagsHandler() {
+          @Override
+          public void onReceiveTags(JSONObject tags) {
+            try {
+              result.success(Utils.jsonToMap(tags));
+            } catch (Exception e) {
+              result.error("FlareLane Error", "The provided tags is invalid.", null);
+            }
+          }
+        });
       } else if (call.method.equals("setTags")) {
         final HashMap<String, Object> tags = call.arguments();
         final JSONObject json = new JSONObject(tags);

@@ -18,7 +18,7 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
     // Register appDelegate
     registrar.addApplicationDelegate(instance)
 
-    FlareLane.setSdkInfo(sdkType: .flutter, sdkVersion: "1.3.0")
+    FlareLane.setSdkInfo(sdkType: .flutter, sdkVersion: "1.3.1")
   }
 
   // ----- FLUTTER INVOKE HANDLER -----
@@ -38,6 +38,10 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
       let userId = call.arguments as? String
       self.setUserId(userId: userId)
       result(true)
+    } else if (method == "getTags") {
+      self.getTags() { tags in
+        result(tags)
+      }
     } else if (method == "setTags") {
       let tags = call.arguments as! [String: Any]
       self.setTags(tags: tags)
@@ -106,6 +110,12 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
 
   func getDeviceId() -> String? {
     return FlareLane.getDeviceId()
+  }
+
+  func getTags(callback: @escaping ([String: Any]?) -> Void) {
+    FlareLane.getTags() { tags in
+      callback(tags)
+    }
   }
 
   // ----- HANDLERS -----

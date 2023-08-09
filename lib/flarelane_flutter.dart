@@ -38,6 +38,11 @@ class FlareLane {
     await _channel.invokeMethod('setUserId', userId);
   }
 
+  Future<Map<String, dynamic>?> getTags() async {
+    Map<dynamic, dynamic> tags = await _channel.invokeMethod('getTags');
+    return tags.cast<String, dynamic>();
+  }
+
   Future<void> setTags(Map<String, Object> tags) async {
     await _channel.invokeMethod('setTags', tags);
   }
