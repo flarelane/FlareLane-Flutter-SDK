@@ -39,8 +39,13 @@ class FlareLane {
   }
 
   Future<Map<String, dynamic>?> getTags() async {
-    Map<dynamic, dynamic> tags = await _channel.invokeMethod('getTags');
-    return tags.cast<String, dynamic>();
+    try {
+      Map<dynamic, dynamic> tags = await _channel.invokeMethod('getTags');
+      return tags.cast<String, dynamic>();
+    } catch (e) {
+      print('[FlareLane] Failed to get tags.');
+      return null;
+    }
   }
 
   Future<void> setTags(Map<String, Object> tags) async {
