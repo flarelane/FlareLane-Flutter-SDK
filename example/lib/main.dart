@@ -125,7 +125,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> getTags() async {
-    print(await FlareLane.shared.getTags());
+    FlareLane.shared.getTags(print);
   }
 
   Future<void> getDeviceId() async {
