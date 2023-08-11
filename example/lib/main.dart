@@ -124,6 +124,10 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  Future<void> getTags() async {
+    FlareLane.shared.getTags(print);
+  }
+
   Future<void> getDeviceId() async {
     print(await FlareLane.shared.getDeviceId());
   }
@@ -150,6 +154,7 @@ class _MyAppState extends State<MyApp> {
                 child: const Text("TOGGLE IS SUBSCRIBED")),
             OutlinedButton(
                 onPressed: toggleTags, child: const Text("TOGGLE TAGS")),
+            OutlinedButton(onPressed: getTags, child: const Text("PRINT TAGS")),
             OutlinedButton(
                 onPressed: getDeviceId, child: const Text("PRINT DEVICE ID")),
             OutlinedButton(

@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 
 typedef NotificationConvertedHandler = void Function(
     FlareLaneNotification notification);
+typedef GetTagsHandler = void Function(Map<String, dynamic> tags);
 
 enum LogLevel { none, error, verbose }
 
@@ -36,6 +37,11 @@ class FlareLane {
 
   Future<void> setUserId(String? userId) async {
     await _channel.invokeMethod('setUserId', userId);
+  }
+
+  Future<void> getTags(GetTagsHandler callback) async {
+    Map<dynamic, dynamic> tags = await _channel.invokeMethod('getTags');
+    callback(tags.cast<String, dynamic>());
   }
 
   Future<void> setTags(Map<String, Object> tags) async {
