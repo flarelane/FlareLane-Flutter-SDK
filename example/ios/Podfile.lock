@@ -15,9 +15,9 @@ PODS:
     - FirebaseCoreInternal (~> 10.0)
     - GoogleUtilities/Environment (~> 7.8)
     - GoogleUtilities/Logger (~> 7.8)
-  - FirebaseCoreInternal (10.13.0):
+  - FirebaseCoreInternal (10.16.0):
     - "GoogleUtilities/NSData+zlib (~> 7.8)"
-  - FirebaseInstallations (10.13.0):
+  - FirebaseInstallations (10.16.0):
     - FirebaseCore (~> 10.0)
     - GoogleUtilities/Environment (~> 7.8)
     - GoogleUtilities/UserDefaults (~> 7.8)
@@ -80,7 +80,7 @@ PODS:
 DEPENDENCIES:
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
-  - FlareLane
+  - FlareLane (from `https://github.com/flarelane/FlareLane-iOS-SDK.git`, branch `add/disable-initial-prompt`)
   - flarelane_flutter (from `.symlinks/plugins/flarelane_flutter/ios`)
   - Flutter (from `Flutter`)
   - onesignal_flutter (from `.symlinks/plugins/onesignal_flutter/ios`)
@@ -93,7 +93,6 @@ SPEC REPOS:
     - FirebaseCoreInternal
     - FirebaseInstallations
     - FirebaseMessaging
-    - FlareLane
     - GoogleDataTransport
     - GoogleUtilities
     - nanopb
@@ -105,6 +104,9 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_core/ios"
   firebase_messaging:
     :path: ".symlinks/plugins/firebase_messaging/ios"
+  FlareLane:
+    :branch: add/disable-initial-prompt
+    :git: https://github.com/flarelane/FlareLane-iOS-SDK.git
   flarelane_flutter:
     :path: ".symlinks/plugins/flarelane_flutter/ios"
   Flutter:
@@ -112,13 +114,18 @@ EXTERNAL SOURCES:
   onesignal_flutter:
     :path: ".symlinks/plugins/onesignal_flutter/ios"
 
+CHECKOUT OPTIONS:
+  FlareLane:
+    :commit: 77df6c475724374ae65851484950510246e4f5eb
+    :git: https://github.com/flarelane/FlareLane-iOS-SDK.git
+
 SPEC CHECKSUMS:
   Firebase: facd334e557a979bd03a0b58d90fd56b52b8aba0
   firebase_core: 85b6664038311940ad60584eaabc73103c61f5de
   firebase_messaging: db0dab2713aafcf69591a1dc4ee8af7d8bba2abd
   FirebaseCore: d027ff503d37edb78db98429b11f580a24a7df2a
-  FirebaseCoreInternal: b342e37cd4f5b4454ec34308f073420e7920858e
-  FirebaseInstallations: b28af1b9f997f1a799efe818c94695a3728c352f
+  FirebaseCoreInternal: 26233f705cc4531236818a07ac84d20c333e505a
+  FirebaseInstallations: b822f91a61f7d1ba763e5ccc9d4f2e6f2ed3b3ee
   FirebaseMessaging: 8a3b9a8b98ce72a42d22e69865cf662e38d2d6f5
   FlareLane: 93cdce1496e1bcb349a36867c543d0b75b5702d8
   flarelane_flutter: 4a1741385d00a4b53f95e12292a55bbe2d6b9b2a
@@ -130,6 +137,6 @@ SPEC CHECKSUMS:
   OneSignalXCFramework: 087934ab0d4d7445fcf1c015c7c782359e26c020
   PromisesObjC: c50d2056b5253dadbd6c2bea79b0674bd5a52fa4
 
-PODFILE CHECKSUM: 0236cb04d34f72e8d1a76a37791b594954d8ec03
+PODFILE CHECKSUM: eb695bb7868115e17d77462e0096605aeee85a6c
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.13.0

@@ -6,29 +6,31 @@ import FlareLane
 public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
   var launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   static var channel: FlutterMethodChannel?
-
+  
   public static func register(with registrar: FlutterPluginRegistrar) {
     let channel = FlutterMethodChannel(name: "com.flarelane.flutter/methods", binaryMessenger: registrar.messenger())
     // To use channel in pulic methods
     SwiftFlareLaneFlutterPlugin.channel = channel
-
+    
     let instance = SwiftFlareLaneFlutterPlugin()
     // Register flutter invoke
     registrar.addMethodCallDelegate(instance, channel: channel)
     // Register appDelegate
     registrar.addApplicationDelegate(instance)
-
+    
     FlareLane.setSdkInfo(sdkType: .flutter, sdkVersion: "1.3.1")
   }
-
+  
   // ----- FLUTTER INVOKE HANDLER -----
-
+  
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     let method = call.method
-
+    
     if (method == "initialize") {
-      let projectId = call.arguments as! String
-      self.initialize(projectId: projectId)
+      let arguments = call.arguments as! [String: Any?]
+      let projectId = arguments["projectId"] as! String
+      let requestPermissionOnLaunch = arguments["requestPermissionOnLaunch"] as? Bool ?? true
+      self.initialize(projectId: projectId, requestPermissionOnLaunch: requestPermissionOnLaunch)
       result(true)
     } else if (method == "setLogLevel") {
       let logLevel = call.arguments as! Int
@@ -52,9 +54,24 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
       result(true)
     } else if (method == "setIsSubscribed") {
       let isSubscribed = call.arguments as! Bool
-      self.setIsSubscribed(isSubscribed: isSubscribed)
-      result(true)
-    } else if (method == "setNotificationConvertedHandler") {
+      self.setIsSubscribed(isSubscribed: isSubscribed) { _isSubscribed in
+        result(_isSubscribed)
+      }
+    }  else if (method == "subscribe") {
+      let fallbackToSettings = call.arguments as! Bool
+      self.subscribe(fallbackToSettings: fallbackToSettings) { isSubscribed in
+        result(isSubscribed)
+      }
+    } else if (method == "unsubscribe") {
+      self.unsubscribe() { isSubscribed in
+        result(isSubscribed)
+      }
+    } else if (method == "isSubscribed") {
+      self.isSubscribed() { isSubscribed in
+        result(isSubscribed)
+      }
+    }
+    else if (method == "setNotificationConvertedHandler") {
       self.setNotificationConvertedHandler()
       result(true)
     } else if (method == "trackEvent") {
@@ -65,61 +82,81 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
       result(true)
     } else if (method == "getDeviceId") {
       result(self.getDeviceId())
-    } 
+    }
     else {
       result(false)
     }
   }
-
+  
   // ----- PUBLIC METHODS -----
-
+  
   func setLogLevel (logLevel: Int) {
     let level = LogLevel(rawValue: logLevel) ?? LogLevel.verbose
     FlareLane.setLogLevel(level: level)
   }
-
-  func initialize (projectId: String) {
+  
+  func initialize (projectId: String, requestPermissionOnLaunch: Bool = true) {
     let launchOptions = self.launchOptions
-    FlareLane.initWithLaunchOptions(launchOptions, projectId: projectId)
+    FlareLane.initWithLaunchOptions(launchOptions, projectId: projectId, requestPermissionOnLaunch: requestPermissionOnLaunch)
     self.launchOptions = nil
   }
-
+  
+  func subscribe (fallbackToSettings: Bool, callback: @escaping (Bool) -> Void) {
+    FlareLane.subscribe(fallbackToSettings: fallbackToSettings) { isSubscribed in
+      callback(isSubscribed)
+    }
+  }
+  
+  func unsubscribe (callback: @escaping (Bool) -> Void) {
+    FlareLane.unsubscribe() { isSubscribed in
+      callback(isSubscribed)
+    }
+  }
+  
   // ----- SET DEVICE META DATA -----
-
+  
   func setUserId(userId: String?) {
     FlareLane.setUserId(userId: userId)
   }
-
+  
   func setTags(tags: [String: Any]) {
     FlareLane.setTags(tags: tags)
   }
-
+  
   func deleteTags(keys: [String]) {
     FlareLane.deleteTags(keys: keys)
   }
-
-  func setIsSubscribed(isSubscribed: Bool) {
-    FlareLane.setIsSubscribed(isSubscribed: isSubscribed)
+  
+  func setIsSubscribed(isSubscribed: Bool, callback: @escaping (Bool) -> Void) {
+    FlareLane.setIsSubscribed(isSubscribed: isSubscribed) { isSubscribed in
+      callback(isSubscribed)
+    }
   }
   
   func trackEvent(type: String, data: [String: Any]?) {
     FlareLane.trackEvent(type, data: data)
   }
-
+  
   // ----- GET DEVICE META DATA -----
-
+  
+  func isSubscribed(callback: @escaping (Bool) -> Void) {
+    FlareLane.isSubscribed() { isSubscribed in
+      callback(isSubscribed)
+    }
+  }
+  
   func getDeviceId() -> String? {
     return FlareLane.getDeviceId()
   }
-
+  
   func getTags(callback: @escaping ([String: Any]?) -> Void) {
     FlareLane.getTags() { tags in
       callback(tags)
     }
   }
-
+  
   // ----- HANDLERS -----
-
+  
   func setNotificationConvertedHandler() {
     FlareLane.setNotificationConvertedHandler() { payload in
       let notificationDictionary: [String: Optional<Any>] = [
@@ -130,13 +167,13 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
         "imageUrl": payload.imageUrl,
         "data": payload.data
       ]
-
+      
       DispatchQueue.main.async {
         SwiftFlareLaneFlutterPlugin.channel?.invokeMethod("setNotificationConvertedHandlerInvokeCallback", arguments: notificationDictionary)
       }
     }
   }
-
+  
   // When App is killed, "didReceiveRemoteNotification" has priority before "NotificationCenter" is registered.
   // When the app is initialized and the native module is called(before "NotificationCenter" is registered),
   // it has the same effect as getting the remoteNotification of launchOptions.

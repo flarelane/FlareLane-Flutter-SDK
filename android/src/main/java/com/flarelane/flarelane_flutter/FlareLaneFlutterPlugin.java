@@ -24,7 +24,9 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 
-/** FlareLaneFlutterPlugin */
+/**
+ * FlareLaneFlutterPlugin
+ */
 public class FlareLaneFlutterPlugin implements FlutterPlugin, MethodCallHandler {
   static Context mContext;
 
@@ -48,8 +50,10 @@ public class FlareLaneFlutterPlugin implements FlutterPlugin, MethodCallHandler 
   public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
     try {
       if (call.method.equals("initialize")) {
-        final String projectId = call.arguments();
-        FlareLane.initWithContext(mContext, projectId);
+        final HashMap<String, Object> args = call.arguments();
+        final String projectId = String.valueOf(args.get("projectId"));
+        final Boolean requestPermissionOnLaunch = args.get("requestPermissionOnLaunch") instanceof Boolean ? (Boolean) args.get("requestPermissionOnLaunch") : false;
+        FlareLane.initWithContext(mContext, projectId, requestPermissionOnLaunch);
         result.success(true);
       } else if (call.method.equals("setLogLevel")) {
         final int intLogLevel = call.arguments();
@@ -81,8 +85,30 @@ public class FlareLaneFlutterPlugin implements FlutterPlugin, MethodCallHandler 
         result.success(true);
       } else if (call.method.equals("setIsSubscribed")) {
         final Boolean isSubscribed = call.arguments();
-        FlareLane.setIsSubscribed(mContext, isSubscribed);
-        result.success(true);
+        FlareLane.setIsSubscribed(mContext, isSubscribed, new FlareLane.IsSubscribedHandler() {
+          @Override
+          public void onSuccess(boolean isSubscribed) {
+            result.success(isSubscribed);
+          }
+        });
+      } else if (call.method.equals("subscribe")) {
+        final Boolean fallbackToSettings = call.arguments();
+        FlareLane.subscribe(mContext, fallbackToSettings, new FlareLane.IsSubscribedHandler() {
+          @Override
+          public void onSuccess(boolean isSubscribed) {
+            result.success(isSubscribed);
+          }
+        });
+      } else if (call.method.equals("unsubscribe")) {
+        FlareLane.unsubscribe(mContext, new FlareLane.IsSubscribedHandler() {
+          @Override
+          public void onSuccess(boolean isSubscribed) {
+            result.success(isSubscribed);
+          }
+        });
+      } else if (call.method.equals("isSubscribed")) {
+        final boolean isSubscribed = FlareLane.isSubscribed(mContext);
+        result.success(isSubscribed);
       } else if (call.method.equals("setAccentColor")) {
         final String accentColor = call.arguments();
         NotificationManager.accentColor = accentColor;

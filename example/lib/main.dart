@@ -8,7 +8,7 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 import 'firebase_options.dart';
 
-const FLARELANE_PROJECT_ID = 'FLARELANE_PROJECT_ID';
+const FLARELANE_PROJECT_ID = 'a43cdc82-0ea5-4fdd-aebc-1940fe99b6c3';
 const ONESIGNAL_PROJECT_ID = "ONESIGNAL_PROJECT_ID";
 
 Future<void> _fcmOnBackgroundMessage(RemoteMessage remoteMessage) async {
@@ -25,8 +25,8 @@ void _fcmOnMessageOpenedApp(RemoteMessage remoteMessage) {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await setupFCM();
-  await setupOS();
+  // await setupFCM();
+  // await setupOS();
   await setupFlareLane();
 
   runApp(const MyApp());
@@ -68,7 +68,10 @@ Future<void> setupOS() async {
 
 Future<void> setupFlareLane() async {
   await FlareLane.shared.setLogLevel(LogLevel.verbose);
-  await FlareLane.shared.initialize(FLARELANE_PROJECT_ID);
+  await FlareLane.shared.initialize(
+    FLARELANE_PROJECT_ID,
+    requestPermissionOnLaunch: true,
+  );
 }
 
 const tags = {"age": 27, "gender": 'men'};
@@ -110,7 +113,9 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> toggleIsSubscribed() async {
-    await FlareLane.shared.setIsSubscribed(_isSubscribed);
+    await FlareLane.shared.setIsSubscribed(_isSubscribed, (isSubscribed) {
+      print(isSubscribed);
+    });
     _isSubscribed = !_isSubscribed;
   }
 
@@ -136,6 +141,23 @@ class _MyAppState extends State<MyApp> {
     await FlareLane.shared.trackEvent("test_event", {"test": "event"});
   }
 
+  Future<void> subscribe() async {
+    await FlareLane.shared.subscribe(true, (isSubscribed) {
+      print(isSubscribed);
+    });
+  }
+
+  Future<void> unsubscribe() async {
+    await FlareLane.shared.unsubscribe((isSubscribed) {
+      print(isSubscribed);
+    });
+  }
+
+  Future<void> isSubscribed() async {
+    final bool isSubscribed = await FlareLane.shared.isSubscribed();
+    print(isSubscribed);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -158,7 +180,13 @@ class _MyAppState extends State<MyApp> {
             OutlinedButton(
                 onPressed: getDeviceId, child: const Text("PRINT DEVICE ID")),
             OutlinedButton(
-                onPressed: trackEvent, child: const Text("TRACK EVENT"))
+                onPressed: trackEvent, child: const Text("TRACK EVENT")),
+            OutlinedButton(
+                onPressed: subscribe, child: const Text("SUBSCRIBE")),
+            OutlinedButton(
+                onPressed: unsubscribe, child: const Text("UNSUBSCRIBE")),
+            OutlinedButton(
+                onPressed: isSubscribed, child: const Text("ISSUBSCRIBED"))
           ],
         ),
       ),
