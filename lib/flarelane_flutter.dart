@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flarelane_flutter/notification.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 typedef NotificationConvertedHandler = void Function(
@@ -32,8 +33,8 @@ class FlareLane {
       "requestPermissionOnLaunch": requestPermissionOnLaunch
     });
     result
-        ? print('[FlareLane] initialize completed.')
-        : print('[FlareLane] initialize failed.');
+        ? debugPrint('[FlareLane] initialize completed.')
+        : debugPrint('[FlareLane] initialize failed.');
   }
 
   Future<void> setLogLevel(LogLevel logLevel) async {

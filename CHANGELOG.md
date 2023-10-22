@@ -1,3 +1,7 @@
+## 1.4.0
+
+- Enable Dynamic Subscribing
+
 ## 1.3.1
 
 - Add getTags method
