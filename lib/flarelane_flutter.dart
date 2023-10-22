@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 typedef NotificationConvertedHandler = void Function(
     FlareLaneNotification notification);
 typedef GetTagsHandler = void Function(Map<String, dynamic> tags);
-typedef SubscribeHandler = void Function(bool isSubscribed);
+typedef IsSubscribedHandler = void Function(bool isSubscribed);
 
 enum LogLevel { none, error, verbose }
 
@@ -58,7 +58,7 @@ class FlareLane {
   }
 
   Future<void> setIsSubscribed(bool isSubscribed,
-      [SubscribeHandler? callback]) async {
+      [IsSubscribedHandler? callback]) async {
     final bool _isSubscribed =
         await _channel.invokeMethod('setIsSubscribed', isSubscribed);
 
@@ -73,7 +73,7 @@ class FlareLane {
   }
 
   Future<void> subscribe(
-      [bool? fallbackToSettings = true, SubscribeHandler? callback]) async {
+      [bool? fallbackToSettings = true, IsSubscribedHandler? callback]) async {
     final bool _isSubscribed =
         await _channel.invokeMethod('subscribe', fallbackToSettings);
 
@@ -82,7 +82,7 @@ class FlareLane {
     }
   }
 
-  Future<void> unsubscribe([SubscribeHandler? callback]) async {
+  Future<void> unsubscribe([IsSubscribedHandler? callback]) async {
     final bool _isSubscribed = await _channel.invokeMethod('unsubscribe');
 
     if (callback != null) {

@@ -36,5 +36,5 @@ android {
 }
 
 dependencies {
-    implementation 'com.github.flarelane:FlareLane-Android-SDK:dev-1.4.0-231011-2-SNAPSHOT'
+    implementation 'com.github.flarelane:FlareLane-Android-SDK:1.4.0'
 }
