@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 typedef NotificationConvertedHandler = void Function(
     FlareLaneNotification notification);
 typedef GetTagsHandler = void Function(Map<String, dynamic> tags);
+typedef IsSubscribedHandler = void Function(bool isSubscribed);
 
 enum LogLevel { none, error, verbose }
 
@@ -24,8 +25,12 @@ class FlareLane {
 
   // ----- PUBLIC METHODS -----
 
-  Future<void> initialize(String projectId) async {
-    final bool result = await _channel.invokeMethod('initialize', projectId);
+  Future<void> initialize(String projectId,
+      {bool? requestPermissionOnLaunch = true}) async {
+    final bool result = await _channel.invokeMethod('initialize', {
+      "projectId": projectId,
+      "requestPermissionOnLaunch": requestPermissionOnLaunch
+    });
     result
         ? print('[FlareLane] initialize completed.')
         : print('[FlareLane] initialize failed.');
@@ -52,8 +57,37 @@ class FlareLane {
     await _channel.invokeMethod('deleteTags', tags);
   }
 
-  Future<void> setIsSubscribed(bool isSubscribed) async {
-    await _channel.invokeMethod('setIsSubscribed', isSubscribed);
+  Future<void> setIsSubscribed(bool isSubscribed,
+      [IsSubscribedHandler? callback]) async {
+    final bool _isSubscribed =
+        await _channel.invokeMethod('setIsSubscribed', isSubscribed);
+
+    if (callback != null) {
+      callback(_isSubscribed);
+    }
+  }
+
+  Future<bool> isSubscribed() async {
+    final bool _isSubscribed = await _channel.invokeMethod('isSubscribed');
+    return _isSubscribed;
+  }
+
+  Future<void> subscribe(
+      [bool? fallbackToSettings = true, IsSubscribedHandler? callback]) async {
+    final bool _isSubscribed =
+        await _channel.invokeMethod('subscribe', fallbackToSettings);
+
+    if (callback != null) {
+      callback(_isSubscribed);
+    }
+  }
+
+  Future<void> unsubscribe([IsSubscribedHandler? callback]) async {
+    final bool _isSubscribed = await _channel.invokeMethod('unsubscribe');
+
+    if (callback != null) {
+      callback(_isSubscribed);
+    }
   }
 
   Future<void> setAccentColor(String accentColor) async {
