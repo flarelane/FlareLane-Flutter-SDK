@@ -1,3 +1,14 @@
+## 1.5.0
+
+- Remove `setIsSubscribed()`-> use `subscribe()` or `unsubscribe()`
+- Name Changed: `setNotificationConvertedHandler()` -> `setNotificationClickedHandler()`
+- Support `setNotificationForegroundReceivedHandler()`
+
+### Android
+
+- Can change accentColor: `flarelane_notification_accent_color` at `values/strings.xml`
+- Can change default channel name: `flarelane_default_channel_name` at `values/strings.xml`
+
 ## 1.4.0
 
 - Enable Dynamic Subscribing

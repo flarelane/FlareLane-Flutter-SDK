@@ -9,8 +9,9 @@ import androidx.annotation.NonNull;
 
 import com.flarelane.FlareLane;
 import com.flarelane.Notification;
-import com.flarelane.NotificationConvertedHandler;
-import com.flarelane.NotificationManager;
+import com.flarelane.NotificationClickedHandler;
+import com.flarelane.NotificationForegroundReceivedHandler;
+import com.flarelane.NotificationReceivedEvent;
 import com.flarelane.SdkType;
 
 import org.json.JSONObject;
@@ -36,6 +37,8 @@ public class FlareLaneFlutterPlugin implements FlutterPlugin, MethodCallHandler 
   /// when the Flutter Engine is detached from the Activity
   private MethodChannel channel;
 
+  private HashMap<String, NotificationReceivedEvent> notificationEventCache = new HashMap<String, NotificationReceivedEvent>();
+
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
     mContext = flutterPluginBinding.getApplicationContext();
@@ -43,7 +46,7 @@ public class FlareLaneFlutterPlugin implements FlutterPlugin, MethodCallHandler 
     channel.setMethodCallHandler(this);
 
     FlareLane.SdkInfo.type = SdkType.FLUTTER;
-    FlareLane.SdkInfo.version = "1.4.0";
+    FlareLane.SdkInfo.version = "1.5.0";
   }
 
   @Override
@@ -83,14 +86,6 @@ public class FlareLaneFlutterPlugin implements FlutterPlugin, MethodCallHandler 
         final ArrayList<String> tags = call.arguments();
         FlareLane.deleteTags(mContext, tags);
         result.success(true);
-      } else if (call.method.equals("setIsSubscribed")) {
-        final Boolean isSubscribed = call.arguments();
-        FlareLane.setIsSubscribed(mContext, isSubscribed, new FlareLane.IsSubscribedHandler() {
-          @Override
-          public void onSuccess(boolean isSubscribed) {
-            result.success(isSubscribed);
-          }
-        });
       } else if (call.method.equals("subscribe")) {
         final Boolean fallbackToSettings = call.arguments();
         FlareLane.subscribe(mContext, fallbackToSettings, new FlareLane.IsSubscribedHandler() {
@@ -109,27 +104,31 @@ public class FlareLaneFlutterPlugin implements FlutterPlugin, MethodCallHandler 
       } else if (call.method.equals("isSubscribed")) {
         final boolean isSubscribed = FlareLane.isSubscribed(mContext);
         result.success(isSubscribed);
-      } else if (call.method.equals("setAccentColor")) {
-        final String accentColor = call.arguments();
-        NotificationManager.accentColor = accentColor;
-        result.success(true);
-      } else if (call.method.equals("setNotificationConvertedHandler")) {
-        FlareLane.setNotificationConvertedHandler(new NotificationConvertedHandler() {
-
+      } else if (call.method.equals("setNotificationClickedHandler")) {
+        FlareLane.setNotificationClickedHandler(new NotificationClickedHandler() {
           @Override
-          public void onConverted(Notification notification) {
-            HashMap<String, Object> hash = new HashMap<>();
-            hash.put("id", notification.id);
-            hash.put("title", notification.title);
-            hash.put("body", notification.body);
-            hash.put("url", notification.url);
-            hash.put("imageUrl", notification.imageUrl);
-            hash.put("data", notification.data);
-
-            invokeMethodOnUiThread("setNotificationConvertedHandlerInvokeCallback", hash);
+          public void onClicked(Notification notification) {
+            invokeMethodOnUiThread("setNotificationClickedHandlerInvokeCallback", notification.toHashMap());
           }
         });
 
+        result.success(true);
+      } else if (call.method.equals("setNotificationForegroundReceivedHandler")) {
+        FlareLane.setNotificationForegroundReceivedHandler(new NotificationForegroundReceivedHandler() {
+          @Override
+          public void onWillDisplay(NotificationReceivedEvent notificationReceivedEvent) {
+            notificationEventCache.put(notificationReceivedEvent.getNotification().id, notificationReceivedEvent);
+            invokeMethodOnUiThread("setNotificationForegroundReceivedHandlerInvokeCallback", notificationReceivedEvent.getNotification().toHashMap());
+          }
+        });
+
+        result.success(true);
+      } else if (call.method.equals("displayNotification")) {
+        final HashMap<String, Object> args = call.arguments();
+        final String notificationId = String.valueOf(args.get("notificationId"));
+        NotificationReceivedEvent event = notificationEventCache.get(notificationId);
+
+        if (event != null) event.display();
         result.success(true);
       } else if (call.method.equals("getDeviceId")) {
         result.success(FlareLane.getDeviceId(mContext));

@@ -61,7 +61,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String _resState = '';
-  String _convertedMessage = '';
+  String _clickedMessage = '';
   bool _isSetUserId = false;
   bool _isSubscribed = false;
   bool _isSetTags = false;
@@ -70,11 +70,25 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
 
-    FlareLane.shared.setNotificationConvertedHandler((notification) {
+    FlareLane.shared.setNotificationClickedHandler((notification) {
       setState(() {
-        _convertedMessage =
-            '✅ Activated convertedHandler\n${notification.toString()}';
+        _clickedMessage =
+            '✅ Message of clickedHandler\n${notification.toString()}';
       });
+    });
+
+    FlareLane.shared.setNotificationForegroundReceivedHandler((event) {
+      setState(() {
+        _clickedMessage =
+            '✅ Message of foregroundReceivedHandler\n${event.notification.toString()}';
+      });
+
+      if (event.notification.data?["dismiss_foreground_notification"] ==
+          "true") {
+        return;
+      }
+
+      event.display();
     });
 
     setState(() {
@@ -86,13 +100,6 @@ class _MyAppState extends State<MyApp> {
     await FlareLane.shared
         .setUserId(_isSetUserId ? null : "myuser@flarelane.com");
     _isSetUserId = !_isSetUserId;
-  }
-
-  Future<void> toggleIsSubscribed() async {
-    await FlareLane.shared.setIsSubscribed(_isSubscribed, (isSubscribed) {
-      print(isSubscribed);
-    });
-    _isSubscribed = !_isSubscribed;
   }
 
   Future<void> toggleTags() async {
@@ -144,12 +151,9 @@ class _MyAppState extends State<MyApp> {
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Center(child: Text('$_resState\n\n$_convertedMessage')),
+            Center(child: Text('$_resState\n\n$_clickedMessage')),
             OutlinedButton(
                 onPressed: toggleUserId, child: const Text("TOGGLE USER ID")),
-            OutlinedButton(
-                onPressed: toggleIsSubscribed,
-                child: const Text("TOGGLE IS SUBSCRIBED")),
             OutlinedButton(
                 onPressed: toggleTags, child: const Text("TOGGLE TAGS")),
             OutlinedButton(onPressed: getTags, child: const Text("PRINT TAGS")),
