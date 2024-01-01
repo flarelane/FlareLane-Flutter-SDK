@@ -2,11 +2,14 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flarelane_flutter/notification.dart';
+import 'package:flarelane_flutter/notification_received_event.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
-typedef NotificationConvertedHandler = void Function(
+typedef NotificationClickedHandler = void Function(
     FlareLaneNotification notification);
+typedef NotificationForegroundReceivedHandler = void Function(
+    FlareLaneNotificationReceivedEvent event);
 typedef GetTagsHandler = void Function(Map<String, dynamic> tags);
 typedef IsSubscribedHandler = void Function(bool isSubscribed);
 
@@ -18,7 +21,8 @@ class FlareLane {
   final MethodChannel _channel =
       const MethodChannel('com.flarelane.flutter/methods');
 
-  NotificationConvertedHandler? _notificationConvertedHandler;
+  NotificationClickedHandler? _notificationClickedHandler;
+  NotificationForegroundReceivedHandler? _notificationForegroundReceivedHandler;
 
   FlareLane() {
     _channel.setMethodCallHandler(_handleMethod);
@@ -58,16 +62,6 @@ class FlareLane {
     await _channel.invokeMethod('deleteTags', tags);
   }
 
-  Future<void> setIsSubscribed(bool isSubscribed,
-      [IsSubscribedHandler? callback]) async {
-    final bool _isSubscribed =
-        await _channel.invokeMethod('setIsSubscribed', isSubscribed);
-
-    if (callback != null) {
-      callback(_isSubscribed);
-    }
-  }
-
   Future<bool> isSubscribed() async {
     final bool _isSubscribed = await _channel.invokeMethod('isSubscribed');
     return _isSubscribed;
@@ -91,15 +85,15 @@ class FlareLane {
     }
   }
 
-  Future<void> setAccentColor(String accentColor) async {
-    if (Platform.isAndroid) {
-      await _channel.invokeMethod('setAccentColor', accentColor);
-    }
+  void setNotificationClickedHandler(NotificationClickedHandler handler) {
+    _notificationClickedHandler = handler;
+    _channel.invokeMethod("setNotificationClickedHandler");
   }
 
-  void setNotificationConvertedHandler(NotificationConvertedHandler handler) {
-    _notificationConvertedHandler = handler;
-    _channel.invokeMethod("setNotificationConvertedHandler");
+  void setNotificationForegroundReceivedHandler(
+      NotificationForegroundReceivedHandler handler) {
+    _notificationForegroundReceivedHandler = handler;
+    _channel.invokeMethod("setNotificationForegroundReceivedHandler");
   }
 
   Future<String?> getDeviceId() async {
@@ -112,11 +106,20 @@ class FlareLane {
   }
 
   Future _handleMethod(MethodCall call) async {
-    if (call.method == 'setNotificationConvertedHandlerInvokeCallback' &&
-        _notificationConvertedHandler != null) {
+    if (call.method == 'setNotificationClickedHandlerInvokeCallback' &&
+        _notificationClickedHandler != null) {
       FlareLaneNotification notification =
           FlareLaneNotification(call.arguments.cast<String, dynamic>());
-      _notificationConvertedHandler!(notification);
+      _notificationClickedHandler!(notification);
+    } else if (call.method ==
+            'setNotificationForegroundReceivedHandlerInvokeCallback' &&
+        _notificationForegroundReceivedHandler != null) {
+      FlareLaneNotification notification =
+          FlareLaneNotification(call.arguments.cast<String, dynamic>());
+      FlareLaneNotificationReceivedEvent event =
+          FlareLaneNotificationReceivedEvent(_channel, notification);
+
+      _notificationForegroundReceivedHandler!(event);
     }
   }
 

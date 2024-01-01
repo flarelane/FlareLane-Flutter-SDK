@@ -5,6 +5,7 @@ import FlareLane
 
 public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
   var launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+  var notificationEventCache = [String: FlareLaneNotificationReceivedEvent]()
   static var channel: FlutterMethodChannel?
 
   public static func register(with registrar: FlutterPluginRegistrar) {
@@ -18,7 +19,7 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
     // Register appDelegate
     registrar.addApplicationDelegate(instance)
 
-    FlareLane.setSdkInfo(sdkType: .flutter, sdkVersion: "1.4.0")
+    FlareLane.setSdkInfo(sdkType: .flutter, sdkVersion: "1.5.0")
   }
 
   // ----- FLUTTER INVOKE HANDLER -----
@@ -52,12 +53,7 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
       let keys = call.arguments as! [String]
       self.deleteTags(keys: keys)
       result(true)
-    } else if (method == "setIsSubscribed") {
-      let isSubscribed = call.arguments as! Bool
-      self.setIsSubscribed(isSubscribed: isSubscribed) { _isSubscribed in
-        result(_isSubscribed)
-      }
-    }  else if (method == "subscribe") {
+    } else if (method == "subscribe") {
       let fallbackToSettings = call.arguments as! Bool
       self.subscribe(fallbackToSettings: fallbackToSettings) { isSubscribed in
         result(isSubscribed)
@@ -71,14 +67,28 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
         result(isSubscribed)
       }
     }
-    else if (method == "setNotificationConvertedHandler") {
-      self.setNotificationConvertedHandler()
+    else if (method == "setNotificationClickedHandler") {
+      self.setNotificationClickedHandler()
+      result(true)
+    } else if (method == "setNotificationForegroundReceivedHandler") {
+      self.setNotificationForegroundReceivedHandler()
+      result(true)
+    } else if (method == "displayNotification") {
+      if let arguments = call.arguments as? [String: Any?],
+         let notificationId = arguments["notificationId"] as? String,
+         let event = notificationEventCache[notificationId] {
+
+        event.display()
+      }
       result(true)
     } else if (method == "trackEvent") {
-      let arguments = call.arguments as! [String: Any?]
-      let type = arguments["type"] as! String
-      let data = arguments["data"] as? [String: Any]
-      self.trackEvent(type:type, data: data)
+      if let arguments = call.arguments as? [String: Any?],
+         let type = arguments["type"] as? String {
+          
+        let data = arguments["data"] as? [String: Any]
+        self.trackEvent(type:type, data: data)
+      }
+      
       result(true)
     } else if (method == "getDeviceId") {
       result(self.getDeviceId())
@@ -127,12 +137,6 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
     FlareLane.deleteTags(keys: keys)
   }
 
-  func setIsSubscribed(isSubscribed: Bool, callback: @escaping (Bool) -> Void) {
-    FlareLane.setIsSubscribed(isSubscribed: isSubscribed) { isSubscribed in
-      callback(isSubscribed)
-    }
-  }
-
   func trackEvent(type: String, data: [String: Any]?) {
     FlareLane.trackEvent(type, data: data)
   }
@@ -157,19 +161,20 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
 
   // ----- HANDLERS -----
 
-  func setNotificationConvertedHandler() {
-    FlareLane.setNotificationConvertedHandler() { payload in
-      let notificationDictionary: [String: Optional<Any>] = [
-        "id": payload.id,
-        "title": payload.title,
-        "body": payload.body,
-        "url": payload.url,
-        "imageUrl": payload.imageUrl,
-        "data": payload.data
-      ]
-
+  func setNotificationClickedHandler() {
+    FlareLane.setNotificationClickedHandler() { notification in
       DispatchQueue.main.async {
-        SwiftFlareLaneFlutterPlugin.channel?.invokeMethod("setNotificationConvertedHandlerInvokeCallback", arguments: notificationDictionary)
+        SwiftFlareLaneFlutterPlugin.channel?.invokeMethod("setNotificationClickedHandlerInvokeCallback", arguments: notification.toDictionary())
+      }
+    }
+  }
+
+  func setNotificationForegroundReceivedHandler() {
+    FlareLane.setNotificationForegroundReceivedHandler() { event in
+      self.notificationEventCache[event.notification.id] = event
+      
+      DispatchQueue.main.async {
+        SwiftFlareLaneFlutterPlugin.channel?.invokeMethod("setNotificationForegroundReceivedHandlerInvokeCallback", arguments: event.notification.toDictionary())
       }
     }
   }

@@ -16,16 +16,13 @@ import FlareLane
   
   override func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
     FlareLaneAppDelegate.shared.application(application, didRegisterForRemoteNotificationsWithDeviceToken: deviceToken)
-    super.application(application, didRegisterForRemoteNotificationsWithDeviceToken: deviceToken)
   }
   
   override func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
     FlareLaneNotificationCenter.shared.userNotificationCenter(center, willPresent: notification, withCompletionHandler: completionHandler)
-    super.userNotificationCenter(center, willPresent: notification, withCompletionHandler: completionHandler)
   }
   
   override func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
     FlareLaneNotificationCenter.shared.userNotificationCenter(center, didReceive: response, withCompletionHandler: completionHandler)
-    super.userNotificationCenter(center, didReceive: response, withCompletionHandler: completionHandler)
   }
 }
