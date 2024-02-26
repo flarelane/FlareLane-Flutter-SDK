@@ -19,7 +19,7 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
     // Register appDelegate
     registrar.addApplicationDelegate(instance)
 
-    FlareLane.setSdkInfo(sdkType: .flutter, sdkVersion: "1.5.0")
+    FlareLane.setSdkInfo(sdkType: .flutter, sdkVersion: "1.5.1")
   }
 
   // ----- FLUTTER INVOKE HANDLER -----
@@ -84,11 +84,11 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
     } else if (method == "trackEvent") {
       if let arguments = call.arguments as? [String: Any?],
          let type = arguments["type"] as? String {
-          
+
         let data = arguments["data"] as? [String: Any]
         self.trackEvent(type:type, data: data)
       }
-      
+
       result(true)
     } else if (method == "getDeviceId") {
       result(self.getDeviceId())
@@ -172,7 +172,7 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
   func setNotificationForegroundReceivedHandler() {
     FlareLane.setNotificationForegroundReceivedHandler() { event in
       self.notificationEventCache[event.notification.id] = event
-      
+
       DispatchQueue.main.async {
         SwiftFlareLaneFlutterPlugin.channel?.invokeMethod("setNotificationForegroundReceivedHandlerInvokeCallback", arguments: event.notification.toDictionary())
       }
