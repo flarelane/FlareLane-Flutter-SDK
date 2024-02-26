@@ -1,3 +1,7 @@
+## 1.5.1
+
+- Fix not inovking handler issue if first subscription
+
 ## 1.5.0
 
 - Remove `setIsSubscribed()`-> use `subscribe()` or `unsubscribe()`
