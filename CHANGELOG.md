@@ -1,3 +1,9 @@
+## 1.6.0
+
+- **[Action Required]** Support processing the URL automatically
+  - If you have a custom clicked handler, set `flarelane_dismiss_launch_url` as `true`
+- Support a javascript bridge for webview
+
 ## 1.5.1
 
 - Fix not inovking handler issue if first subscription

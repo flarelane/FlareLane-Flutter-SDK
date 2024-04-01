@@ -47,5 +47,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>flarelane_dismiss_launch_url</key>
+	<false/>
 </dict>
 </plist>
