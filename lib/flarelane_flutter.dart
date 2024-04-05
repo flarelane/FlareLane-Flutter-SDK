@@ -2,12 +2,14 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flarelane_flutter/notification.dart';
+import 'package:flarelane_flutter/notification_action.dart';
+import 'package:flarelane_flutter/notification_clicked_event.dart';
 import 'package:flarelane_flutter/notification_received_event.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 typedef NotificationClickedHandler = void Function(
-    FlareLaneNotification notification);
+    FlareLaneNotificationClickedEvent event);
 typedef NotificationForegroundReceivedHandler = void Function(
     FlareLaneNotificationReceivedEvent event);
 typedef GetTagsHandler = void Function(Map<String, dynamic> tags);
@@ -110,7 +112,11 @@ class FlareLane {
         _notificationClickedHandler != null) {
       FlareLaneNotification notification =
           FlareLaneNotification(call.arguments.cast<String, dynamic>());
-      _notificationClickedHandler!(notification);
+      FlareLaneNotificationAction action =
+          FlareLaneNotificationAction(call.arguments.cast<String, dynamic>());
+      FlareLaneNotificationClickedEvent event =
+          FlareLaneNotificationClickedEvent(notification, action);
+      _notificationClickedHandler!(event);
     } else if (call.method ==
             'setNotificationForegroundReceivedHandlerInvokeCallback' &&
         _notificationForegroundReceivedHandler != null) {

@@ -70,10 +70,10 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
 
-    FlareLane.shared.setNotificationClickedHandler((notification) {
+    FlareLane.shared.setNotificationClickedHandler((event) {
       setState(() {
         _clickedMessage =
-            '✅ Message of clickedHandler\n${notification.toString()}';
+            '✅ Message of clickedHandler\n${event.toString()}';
       });
     });
 

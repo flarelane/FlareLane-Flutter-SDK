@@ -7,6 +7,7 @@ class FlareLaneNotification {
   String? url;
   String? imageUrl;
   Map? data;
+  String? buttons;
 
   FlareLaneNotification(Map<String, dynamic> json) {
     if (json.containsKey('id')) id = json['id'] as String;
@@ -21,10 +22,11 @@ class FlareLaneNotification {
         data = jsonDecode(json['data']);
       }
     }
+    if (json.containsKey('buttons')) buttons = json['buttons'] as String?;
   }
 
   @override
   String toString() {
-    return 'FlareLaneNotification{id: $id, title: $title, body: $body, url: $url, imageUrl: $imageUrl, data: $data}';
+    return 'FlareLaneNotification{id: $id, title: $title, body: $body, url: $url, imageUrl: $imageUrl, data: $data, buttons: $buttons}';
   }
 }
