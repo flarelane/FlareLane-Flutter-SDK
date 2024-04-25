@@ -35,7 +35,7 @@ end
 
 target 'FlareLaneNotificationServiceExtension' do
   use_frameworks!
-  pod 'FlareLane', '1.6.0'
+  pod 'FlareLane', '1.6.1'
 end
 
 post_install do |installer|
