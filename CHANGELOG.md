@@ -1,3 +1,7 @@
+## 1.6.1
+
+- iOS: Add privacy manifest
+
 ## 1.6.0
 
 - **[Action Required]** Support processing the URL automatically
