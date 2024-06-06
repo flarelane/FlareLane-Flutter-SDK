@@ -49,17 +49,8 @@ class FlareLane {
     await _channel.invokeMethod('setUserId', userId);
   }
 
-  Future<void> getTags(GetTagsHandler callback) async {
-    Map<dynamic, dynamic> tags = await _channel.invokeMethod('getTags');
-    callback(tags.cast<String, dynamic>());
-  }
-
-  Future<void> setTags(Map<String, Object> tags) async {
+  Future<void> setTags(Map<String, Object?> tags) async {
     await _channel.invokeMethod('setTags', tags);
-  }
-
-  Future<void> deleteTags(List<String> tags) async {
-    await _channel.invokeMethod('deleteTags', tags);
   }
 
   Future<bool> isSubscribed() async {
