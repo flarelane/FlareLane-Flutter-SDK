@@ -50,8 +50,6 @@ Future<void> setupFCM() async {
   FirebaseMessaging.onMessageOpenedApp.listen(_fcmOnMessageOpenedApp);
 }
 
-const tags = {"age": 27, "gender": 'men'};
-
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -104,16 +102,12 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> toggleTags() async {
     if (!_isSetTags) {
-      await FlareLane.shared.setTags(tags);
+      await FlareLane.shared.setTags({"age": 27, "gender": 'men'});
       _isSetTags = true;
     } else {
-      await FlareLane.shared.deleteTags(tags.keys.toList());
+      await FlareLane.shared.setTags({"age": null, "gender": null});
       _isSetTags = false;
     }
-  }
-
-  Future<void> getTags() async {
-    FlareLane.shared.getTags(print);
   }
 
   Future<void> getDeviceId() async {
@@ -156,7 +150,6 @@ class _MyAppState extends State<MyApp> {
                 onPressed: toggleUserId, child: const Text("TOGGLE USER ID")),
             OutlinedButton(
                 onPressed: toggleTags, child: const Text("TOGGLE TAGS")),
-            OutlinedButton(onPressed: getTags, child: const Text("PRINT TAGS")),
             OutlinedButton(
                 onPressed: getDeviceId, child: const Text("PRINT DEVICE ID")),
             OutlinedButton(

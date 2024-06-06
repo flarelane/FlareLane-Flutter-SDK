@@ -1,3 +1,10 @@
+## 1.6.2
+
+- Remove `getTags` because of security issues.
+- Remove `deleteTags`.
+- Change `setTags` to enable null value.
+- Upgrade Android SDK ([1.6.1](https://github.com/flarelane/FlareLane-Android-SDK/releases)).
+
 ## 1.6.1
 
 - iOS: Add privacy manifest

@@ -32,7 +32,7 @@ PODS:
     - GoogleUtilities/UserDefaults (~> 7.8)
     - nanopb (< 2.30910.0, >= 2.30908.0)
   - FlareLane (1.6.1)
-  - flarelane_flutter (1.6.1):
+  - flarelane_flutter (1.6.2):
     - FlareLane (= 1.6.1)
     - Flutter
   - Flutter (1.0.0)
@@ -103,7 +103,7 @@ SPEC CHECKSUMS:
   FirebaseInstallations: 033d199474164db20c8350736842a94fe717b960
   FirebaseMessaging: 0c0ae1eb722ef0c07f7801e5ded8dccd1357d6d4
   FlareLane: 777215b21feead5528694327014bddd69066dc26
-  flarelane_flutter: 2869655ee5d10977504d31b38afd7e0a5587addb
+  flarelane_flutter: fb6f9ea5d160a5d18f6dd13f158fdb6d2cfa206c
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   GoogleDataTransport: 57c22343ab29bc686febbf7cbb13bad167c2d8fe
   GoogleUtilities: 0759d1a57ebb953965c2dfe0ba4c82e95ccc2e34
