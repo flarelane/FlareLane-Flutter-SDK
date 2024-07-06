@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flarelane_flutter/in_app_message.dart';
 import 'package:flarelane_flutter/notification.dart';
 import 'package:flarelane_flutter/notification_received_event.dart';
 import 'package:flutter/foundation.dart';
@@ -10,6 +11,8 @@ typedef NotificationClickedHandler = void Function(
     FlareLaneNotification notification);
 typedef NotificationForegroundReceivedHandler = void Function(
     FlareLaneNotificationReceivedEvent event);
+typedef InAppMessageActionHandler = void Function(
+    InAppMessage iam, String actionId);
 typedef GetTagsHandler = void Function(Map<String, dynamic> tags);
 typedef IsSubscribedHandler = void Function(bool isSubscribed);
 
@@ -23,6 +26,7 @@ class FlareLane {
 
   NotificationClickedHandler? _notificationClickedHandler;
   NotificationForegroundReceivedHandler? _notificationForegroundReceivedHandler;
+  InAppMessageActionHandler? _inAppMessageActionHandler;
 
   FlareLane() {
     _channel.setMethodCallHandler(_handleMethod);
@@ -76,6 +80,10 @@ class FlareLane {
     }
   }
 
+  Future<void> displayInApp(String group) async {
+    _channel.invokeMethod('displayInApp', group);
+  }
+
   void setNotificationClickedHandler(NotificationClickedHandler handler) {
     _notificationClickedHandler = handler;
     _channel.invokeMethod("setNotificationClickedHandler");
@@ -85,6 +93,11 @@ class FlareLane {
       NotificationForegroundReceivedHandler handler) {
     _notificationForegroundReceivedHandler = handler;
     _channel.invokeMethod("setNotificationForegroundReceivedHandler");
+  }
+
+  void setInAppMessageActionHandler(InAppMessageActionHandler handler) {
+    _inAppMessageActionHandler = handler;
+    _channel.invokeMethod("setInAppMessageActionHandler");
   }
 
   Future<String?> getDeviceId() async {
@@ -111,6 +124,12 @@ class FlareLane {
           FlareLaneNotificationReceivedEvent(_channel, notification);
 
       _notificationForegroundReceivedHandler!(event);
+    } else if (call.method == 'setInAppMessageActionHandlerInvokeCallback' &&
+        _inAppMessageActionHandler != null) {
+      InAppMessage iam =
+          InAppMessage(call.arguments['iam'].cast<String, dynamic>());
+      String actionId = call.arguments['actionId'];
+      _inAppMessageActionHandler!(iam, actionId);
     }
   }
 

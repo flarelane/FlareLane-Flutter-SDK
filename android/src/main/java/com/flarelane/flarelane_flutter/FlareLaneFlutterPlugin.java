@@ -8,6 +8,8 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.flarelane.FlareLane;
+import com.flarelane.InAppMessage;
+import com.flarelane.InAppMessageActionHandler;
 import com.flarelane.Notification;
 import com.flarelane.NotificationClickedHandler;
 import com.flarelane.NotificationForegroundReceivedHandler;
@@ -66,25 +68,10 @@ public class FlareLaneFlutterPlugin implements FlutterPlugin, MethodCallHandler 
         final String userId = call.arguments();
         FlareLane.setUserId(mContext, userId);
         result.success(true);
-      } else if (call.method.equals("getTags")) {
-        FlareLane.getTags(mContext, new FlareLane.GetTagsHandler() {
-          @Override
-          public void onReceiveTags(JSONObject tags) {
-            try {
-              result.success(Utils.jsonToMap(tags));
-            } catch (Exception e) {
-              result.error("FlareLane Error", "The provided tags is invalid.", null);
-            }
-          }
-        });
       } else if (call.method.equals("setTags")) {
         final HashMap<String, Object> tags = call.arguments();
         final JSONObject json = new JSONObject(tags);
         FlareLane.setTags(mContext, json);
-        result.success(true);
-      } else if (call.method.equals("deleteTags")) {
-        final ArrayList<String> tags = call.arguments();
-        FlareLane.deleteTags(mContext, tags);
         result.success(true);
       } else if (call.method.equals("subscribe")) {
         final Boolean fallbackToSettings = call.arguments();
@@ -111,7 +98,6 @@ public class FlareLaneFlutterPlugin implements FlutterPlugin, MethodCallHandler 
             invokeMethodOnUiThread("setNotificationClickedHandlerInvokeCallback", notification.toHashMap());
           }
         });
-
         result.success(true);
       } else if (call.method.equals("setNotificationForegroundReceivedHandler")) {
         FlareLane.setNotificationForegroundReceivedHandler(new NotificationForegroundReceivedHandler() {
@@ -121,7 +107,17 @@ public class FlareLaneFlutterPlugin implements FlutterPlugin, MethodCallHandler 
             invokeMethodOnUiThread("setNotificationForegroundReceivedHandlerInvokeCallback", notificationReceivedEvent.getNotification().toHashMap());
           }
         });
-
+        result.success(true);
+      } else if (call.method.equals("setInAppMessageActionHandler")) {
+        FlareLane.setInAppMessageActionHandler(new InAppMessageActionHandler() {
+          @Override
+          public void onExecute(@NonNull InAppMessage iam, @NonNull String actionId) {
+            HashMap<Object, Object> hashmap = new HashMap<>();
+            hashmap.put("iam", iam.toHashMap());
+            hashmap.put("actionId", actionId);
+            invokeMethodOnUiThread("setInAppMessageActionHandlerInvokeCallback", hashmap);
+          }
+        });
         result.success(true);
       } else if (call.method.equals("displayNotification")) {
         final HashMap<String, Object> args = call.arguments();
@@ -137,9 +133,11 @@ public class FlareLaneFlutterPlugin implements FlutterPlugin, MethodCallHandler 
         final String type = String.valueOf(args.get("type"));
         final Object _data = args.get("data");
         final JSONObject jsonData = _data instanceof HashMap ? new JSONObject((HashMap<String, Object>) _data) : null;
-
         FlareLane.trackEvent(mContext, type, jsonData);
-
+        result.success(true);
+      } else if (call.method.equals("displayInApp")) {
+        final String group = call.arguments();
+        FlareLane.displayInApp(mContext, group);
         result.success(true);
       } else {
         result.notImplemented();

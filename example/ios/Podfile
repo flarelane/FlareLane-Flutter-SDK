@@ -35,7 +35,7 @@ end
 
 target 'FlareLaneNotificationServiceExtension' do
   use_frameworks!
-  pod 'FlareLane', '1.6.1'
+  pod 'FlareLane', path: '/Users/minhyeok4dev/Documents/flarelane/FlareLane-iOS-SDK/FlareLane.podspec'
 end
 
 post_install do |installer|

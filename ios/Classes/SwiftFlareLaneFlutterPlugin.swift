@@ -19,7 +19,7 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
     // Register appDelegate
     registrar.addApplicationDelegate(instance)
 
-    FlareLane.setSdkInfo(sdkType: .flutter, sdkVersion: "1.6.2")
+    FlareLane.setSdkInfo(sdkType: .flutter, sdkVersion: "1.7.0")
   }
 
   // ----- FLUTTER INVOKE HANDLER -----
@@ -41,17 +41,9 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
       let userId = call.arguments as? String
       self.setUserId(userId: userId)
       result(true)
-    } else if (method == "getTags") {
-      self.getTags() { tags in
-        result(tags)
-      }
     } else if (method == "setTags") {
       let tags = call.arguments as! [String: Any]
       self.setTags(tags: tags)
-      result(true)
-    } else if (method == "deleteTags") {
-      let keys = call.arguments as! [String]
-      self.deleteTags(keys: keys)
       result(true)
     } else if (method == "subscribe") {
       let fallbackToSettings = call.arguments as! Bool
@@ -72,6 +64,14 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
       result(true)
     } else if (method == "setNotificationForegroundReceivedHandler") {
       self.setNotificationForegroundReceivedHandler()
+      result(true)
+    } else if method == "setInAppMessageActionHandler" {
+      self.setInAppMessageActionHandler()
+      result(true)
+    } else if method == "displayInApp" {
+      if let group = call.arguments as? String {
+        self.displayInApp(group: group)
+      }
       result(true)
     } else if (method == "displayNotification") {
       if let arguments = call.arguments as? [String: Any?],
@@ -123,6 +123,10 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
     }
   }
 
+  func displayInApp (group: String) {
+    FlareLane.displayInApp(group: group)
+  }
+
   // ----- SET DEVICE META DATA -----
 
   func setUserId(userId: String?) {
@@ -131,10 +135,6 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
 
   func setTags(tags: [String: Any]) {
     FlareLane.setTags(tags: tags)
-  }
-
-  func deleteTags(keys: [String]) {
-    FlareLane.deleteTags(keys: keys)
   }
 
   func trackEvent(type: String, data: [String: Any]?) {
@@ -151,12 +151,6 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
 
   func getDeviceId() -> String? {
     return FlareLane.getDeviceId()
-  }
-
-  func getTags(callback: @escaping ([String: Any]?) -> Void) {
-    FlareLane.getTags() { tags in
-      callback(tags)
-    }
   }
 
   // ----- HANDLERS -----
@@ -179,6 +173,14 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
     }
   }
 
+  func setInAppMessageActionHandler() {
+    FlareLane.setInAppMessageActionHandler { iam, actionId in
+      DispatchQueue.main.async {
+        SwiftFlareLaneFlutterPlugin.channel?.invokeMethod("setInAppMessageActionHandlerInvokeCallback", arguments: ["iam": iam.toDictionary(), "actionId": actionId])
+      }
+    }
+  }
+
   // When App is killed, "didReceiveRemoteNotification" has priority before "NotificationCenter" is registered.
   // When the app is initialized and the native module is called(before "NotificationCenter" is registered),
   // it has the same effect as getting the remoteNotification of launchOptions.
@@ -186,5 +188,13 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
     let launchOptions = [UIApplication.LaunchOptionsKey.remoteNotification: userInfo] as [UIApplication.LaunchOptionsKey: Any]
     self.launchOptions = launchOptions
     return true
+  }
+}
+
+extension FlareLaneInAppMessage {
+  func toDictionary() -> [String: Any] {
+    return [
+      "id": self.id
+    ]
   }
 }

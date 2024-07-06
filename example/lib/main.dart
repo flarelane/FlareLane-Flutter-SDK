@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 
 import 'firebase_options.dart';
 
-const FLARELANE_PROJECT_ID = 'FLARELANE_PROJECT_ID';
+const FLARELANE_PROJECT_ID = 'a43cdc82-0ea5-4fdd-aebc-1940fe99b6c3';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -89,6 +89,15 @@ class _MyAppState extends State<MyApp> {
       event.display();
     });
 
+    FlareLane.shared.setInAppMessageActionHandler((iam, actionId) {
+      var message =
+          '✅ Message of setInAppMessageActionHandler\n${iam.toString()}\nactionId:${actionId}';
+      print(message);
+      setState(() {
+        _clickedMessage = message;
+      });
+    });
+
     setState(() {
       _resState = 'FlareLane initialized.';
     });
@@ -135,6 +144,11 @@ class _MyAppState extends State<MyApp> {
     print(isSubscribed);
   }
 
+  Future<void> displayInApp() async {
+    FlareLane.shared.displayInApp("home");
+    print("displayInApp() called.");
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -159,7 +173,9 @@ class _MyAppState extends State<MyApp> {
             OutlinedButton(
                 onPressed: unsubscribe, child: const Text("UNSUBSCRIBE")),
             OutlinedButton(
-                onPressed: isSubscribed, child: const Text("ISSUBSCRIBED"))
+                onPressed: isSubscribed, child: const Text("ISSUBSCRIBED")),
+            OutlinedButton(
+                onPressed: displayInApp, child: const Text("DISPLAY INAPP"))
           ],
         ),
       ),
