@@ -89,6 +89,17 @@ class _MyAppState extends State<MyApp> {
       event.display();
     });
 
+    FlareLane.shared.setInAppMessageActionHandler((iam, actionId) {
+      var message =
+          '✅ Message of setInAppMessageActionHandler\n${iam.toString()}\nactionId:${actionId}';
+      print(message);
+      setState(() {
+        _clickedMessage = message;
+      });
+    });
+
+    FlareLane.shared.displayInApp("home");
+
     setState(() {
       _resState = 'FlareLane initialized.';
     });
@@ -135,6 +146,10 @@ class _MyAppState extends State<MyApp> {
     print(isSubscribed);
   }
 
+  Future<void> displayInApp() async {
+    FlareLane.shared.displayInApp("home");
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -159,7 +174,9 @@ class _MyAppState extends State<MyApp> {
             OutlinedButton(
                 onPressed: unsubscribe, child: const Text("UNSUBSCRIBE")),
             OutlinedButton(
-                onPressed: isSubscribed, child: const Text("ISSUBSCRIBED"))
+                onPressed: isSubscribed, child: const Text("ISSUBSCRIBED")),
+            OutlinedButton(
+                onPressed: displayInApp, child: const Text("DISPLAY INAPP"))
           ],
         ),
       ),

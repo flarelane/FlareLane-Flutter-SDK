@@ -1,3 +1,9 @@
+## 1.7.0
+
+- Upgrade Android & iOS SDK (1.7.0)
+  - Support In-App Message.
+  - Ensure the function invokes after init.
+
 ## 1.6.2
 
 - Remove `getTags` because of security issues.
