@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 
 import 'firebase_options.dart';
 
-const FLARELANE_PROJECT_ID = 'a43cdc82-0ea5-4fdd-aebc-1940fe99b6c3';
+const FLARELANE_PROJECT_ID = 'FLARELANE_PROJECT_ID';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -98,6 +98,8 @@ class _MyAppState extends State<MyApp> {
       });
     });
 
+    FlareLane.shared.displayInApp("home");
+
     setState(() {
       _resState = 'FlareLane initialized.';
     });
@@ -146,7 +148,6 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> displayInApp() async {
     FlareLane.shared.displayInApp("home");
-    print("displayInApp() called.");
   }
 
   @override

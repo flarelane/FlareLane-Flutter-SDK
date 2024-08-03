@@ -31,10 +31,10 @@ android {
     }
 
     defaultConfig {
-        minSdkVersion 21
+        minSdkVersion 24
     }
 }
 
 dependencies {
-    implementation 'com.github.flarelane:FlareLane-Android-SDK:dev-1.7.0-2-SNAPSHOT'
+    implementation 'com.github.flarelane:FlareLane-Android-SDK:1.7.0'
 }
