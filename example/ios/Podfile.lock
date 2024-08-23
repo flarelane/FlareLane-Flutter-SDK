@@ -31,9 +31,9 @@ PODS:
     - GoogleUtilities/Reachability (~> 7.8)
     - GoogleUtilities/UserDefaults (~> 7.8)
     - nanopb (< 2.30910.0, >= 2.30908.0)
-  - FlareLane (1.7.0)
-  - flarelane_flutter (1.7.0):
-    - FlareLane (= 1.7.0)
+  - FlareLane (1.7.1)
+  - flarelane_flutter (1.7.1):
+    - FlareLane (= 1.7.1)
     - Flutter
   - Flutter (1.0.0)
   - GoogleDataTransport (9.4.1):
@@ -75,7 +75,7 @@ PODS:
 DEPENDENCIES:
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
-  - FlareLane (= 1.7.0)
+  - FlareLane (= 1.7.1)
   - flarelane_flutter (from `.symlinks/plugins/flarelane_flutter/ios`)
   - Flutter (from `Flutter`)
 
@@ -110,14 +110,14 @@ SPEC CHECKSUMS:
   FirebaseCoreInternal: df84dd300b561c27d5571684f389bf60b0a5c934
   FirebaseInstallations: 913cf60d0400ebd5d6b63a28b290372ab44590dd
   FirebaseMessaging: 0c0ae1eb722ef0c07f7801e5ded8dccd1357d6d4
-  FlareLane: f630b5e68a59fc4890e79f86c2b3bc7e9e0117e2
-  flarelane_flutter: a8464699354855fbe46d57cefb58fd9e7c0760fe
+  FlareLane: 8ffdeb3ba10d4f4047872c950c4b802af3f8d5ea
+  flarelane_flutter: 29f4c029e60cfd1d4b7d4e414d87511726b5fd99
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   GoogleDataTransport: 6c09b596d841063d76d4288cc2d2f42cc36e1e2a
   GoogleUtilities: ea963c370a38a8069cc5f7ba4ca849a60b6d7d15
   nanopb: d4d75c12cd1316f4a64e3c6963f879ecd4b5e0d5
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
 
-PODFILE CHECKSUM: 88c3468068627213bceaf473373704428af4884a
+PODFILE CHECKSUM: 1cbdbe1759e154bf69a1874db37832dd745f1cf8
 
 COCOAPODS: 1.15.2

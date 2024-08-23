@@ -50,10 +50,12 @@ class FlareLane {
   }
 
   Future<void> setUserId(String? userId) async {
+    debugPrint('[FlareLane] setUserId: $userId');
     await _channel.invokeMethod('setUserId', userId);
   }
 
   Future<void> setTags(Map<String, Object?> tags) async {
+    debugPrint('[FlareLane] setTags: $tags');
     await _channel.invokeMethod('setTags', tags);
   }
 
@@ -106,6 +108,7 @@ class FlareLane {
   }
 
   Future<void> trackEvent(String type, [Map<String, Object>? data]) async {
+    debugPrint('[FlareLane] trackEvent: $type, $data');
     await _channel.invokeMethod('trackEvent', {"type": type, "data": data});
   }
 
