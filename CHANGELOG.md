@@ -1,3 +1,8 @@
+## 1.7.1
+
+- Upgrade Android & iOS SDK (1.7.1)
+  - Enhance sustainability: Managing functions and tasks sequentially
+
 ## 1.7.0
 
 - Upgrade Android & iOS SDK (1.7.0)
