@@ -1,3 +1,7 @@
+## 1.8.0
+
+- Support AGP 8
+
 ## 1.7.1
 
 - Upgrade Android & iOS SDK (1.7.1)

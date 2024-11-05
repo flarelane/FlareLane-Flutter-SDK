@@ -1,20 +1,13 @@
 import 'dart:async';
 
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flarelane_flutter/flarelane_flutter.dart';
 import 'package:flutter/material.dart';
-
-import 'firebase_options.dart';
 
 const FLARELANE_PROJECT_ID = 'FLARELANE_PROJECT_ID';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   setupFlareLane();
-
-  // Test with FCM
-  setupFCM();
 
   runApp(const MyApp());
 }
@@ -24,30 +17,6 @@ Future<void> setupFlareLane() async {
     FLARELANE_PROJECT_ID,
     requestPermissionOnLaunch: false,
   );
-}
-
-Future<void> _fcmOnBackgroundMessage(RemoteMessage remoteMessage) async {
-  print('FCM onBackgroundMessage: ${remoteMessage.toMap()}');
-}
-
-void _fcmOnMessageHandler(RemoteMessage remoteMessage) {
-  print('FCM onMessage: ${remoteMessage.toMap()}');
-}
-
-void _fcmOnMessageOpenedApp(RemoteMessage remoteMessage) {
-  print('FCM onMessageOpenedApp: ${remoteMessage.toMap()}');
-}
-
-Future<void> setupFCM() async {
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  FirebaseMessaging messaging = FirebaseMessaging.instance;
-  String? token = await messaging.getToken();
-  print('FCM: token $token');
-  FirebaseMessaging.onMessage.listen(_fcmOnMessageOpenedApp);
-  FirebaseMessaging.onBackgroundMessage(_fcmOnBackgroundMessage);
-  FirebaseMessaging.onMessageOpenedApp.listen(_fcmOnMessageOpenedApp);
 }
 
 class MyApp extends StatefulWidget {
