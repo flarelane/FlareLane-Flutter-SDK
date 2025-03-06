@@ -1,12 +1,12 @@
 PODS:
-  - FlareLane (1.7.1)
-  - flarelane_flutter (1.8.0):
-    - FlareLane (= 1.7.1)
+  - FlareLane (1.7.3)
+  - flarelane_flutter (1.8.1):
+    - FlareLane (= 1.7.3)
     - Flutter
   - Flutter (1.0.0)
 
 DEPENDENCIES:
-  - FlareLane (= 1.7.1)
+  - FlareLane (= 1.7.3)
   - flarelane_flutter (from `.symlinks/plugins/flarelane_flutter/ios`)
   - Flutter (from `Flutter`)
 
@@ -21,10 +21,10 @@ EXTERNAL SOURCES:
     :path: Flutter
 
 SPEC CHECKSUMS:
-  FlareLane: 8ffdeb3ba10d4f4047872c950c4b802af3f8d5ea
-  flarelane_flutter: 5cf6a84e9fc6573d687178c3c6128c3c22b16d06
+  FlareLane: e6b1c69beffcb5beacae4fbb2edc1127054967e7
+  flarelane_flutter: 25c3cb0b3dc423c37ed8e782c983d9ea8e98c678
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
 
-PODFILE CHECKSUM: 1cbdbe1759e154bf69a1874db37832dd745f1cf8
+PODFILE CHECKSUM: 10f94a8349bf399415a64a21fb9f0a884b87773d
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.16.2
