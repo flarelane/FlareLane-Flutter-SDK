@@ -1,3 +1,12 @@
+## 1.9.1
+
+- Upgrade Android SDK (1.8.4)
+- Upgrade iOS SDK (1.9.1)
+
+## 1.9.0
+
+- Upgrade iOS SDK (1.9.0)
+
 ## 1.8.1
 
 - Upgrade Android SDK (1.8.2)

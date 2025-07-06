@@ -82,8 +82,9 @@ class FlareLane {
     }
   }
 
-  Future<void> displayInApp(String group) async {
-    _channel.invokeMethod('displayInApp', group);
+  Future<void> displayInApp(String group,
+      [Map<String, Object> data = const {}]) async {
+    _channel.invokeMethod('displayInApp', {"group": group, "data": data});
   }
 
   void setNotificationClickedHandler(NotificationClickedHandler handler) {

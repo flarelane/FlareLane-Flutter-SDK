@@ -48,7 +48,7 @@ public class FlareLaneFlutterPlugin implements FlutterPlugin, MethodCallHandler 
     channel.setMethodCallHandler(this);
 
     FlareLane.SdkInfo.type = SdkType.FLUTTER;
-    FlareLane.SdkInfo.version = "1.8.1";
+    FlareLane.SdkInfo.version = "1.9.1";
   }
 
   @Override
@@ -136,8 +136,11 @@ public class FlareLaneFlutterPlugin implements FlutterPlugin, MethodCallHandler 
         FlareLane.trackEvent(mContext, type, jsonData);
         result.success(true);
       } else if (call.method.equals("displayInApp")) {
-        final String group = call.arguments();
-        FlareLane.displayInApp(mContext, group);
+        final HashMap<String, Object> args = call.arguments();
+        final String group = String.valueOf(args.get("group"));
+        final Object _data = args.get("data");
+        final JSONObject data = _data instanceof HashMap ? new JSONObject((HashMap<String, Object>) _data) : null;
+        FlareLane.displayInApp(mContext, group, data);
         result.success(true);
       } else {
         result.notImplemented();
