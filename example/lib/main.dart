@@ -116,7 +116,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> displayInApp() async {
-    FlareLane.shared.displayInApp("home");
+    FlareLane.shared.displayInApp("home", {"test": "data", "test2": 123});
   }
 
   @override

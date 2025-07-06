@@ -19,7 +19,7 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
     // Register appDelegate
     registrar.addApplicationDelegate(instance)
 
-    FlareLane.setSdkInfo(sdkType: .flutter, sdkVersion: "1.8.1")
+    FlareLane.setSdkInfo(sdkType: .flutter, sdkVersion: "1.9.1")
   }
 
   // ----- FLUTTER INVOKE HANDLER -----
@@ -69,8 +69,10 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
       self.setInAppMessageActionHandler()
       result(true)
     } else if method == "displayInApp" {
-      if let group = call.arguments as? String {
-        self.displayInApp(group: group)
+      if let arguments = call.arguments as? [String: Any?],
+         let group = arguments["group"] as? String,
+         let data = arguments["data"] as? [String: Any] {
+        self.displayInApp(group: group, data: data)
       }
       result(true)
     } else if (method == "displayNotification") {
@@ -123,8 +125,8 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
     }
   }
 
-  func displayInApp (group: String) {
-    FlareLane.displayInApp(group: group)
+  func displayInApp (group: String, data: [String: Any]) {
+    FlareLane.displayInApp(group: group, data: data)
   }
 
   // ----- SET DEVICE META DATA -----
