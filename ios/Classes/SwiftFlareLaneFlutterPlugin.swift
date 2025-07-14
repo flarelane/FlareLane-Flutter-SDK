@@ -19,7 +19,7 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
     // Register appDelegate
     registrar.addApplicationDelegate(instance)
 
-    FlareLane.setSdkInfo(sdkType: .flutter, sdkVersion: "1.9.1")
+    FlareLane.setSdkInfo(sdkType: .flutter, sdkVersion: "1.9.2")
   }
 
   // ----- FLUTTER INVOKE HANDLER -----
