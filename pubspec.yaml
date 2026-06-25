@@ -1,6 +1,6 @@
 name: flarelane_flutter
 description: FlareLane Flutter SDK
-version: 1.9.2
+version: 1.10.0
 homepage: https://flarelane.com
 
 environment:
@@ -15,6 +15,11 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^1.0.0
+  # Webview adapters under `lib/adapters/` import these packages. They're
+  # dev-only deps so consumers of this SDK don't pull them in — customers
+  # add only the library they actually use to their own app pubspec.
+  webview_flutter: ^4.7.0
+  flutter_inappwebview: ^5.8.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

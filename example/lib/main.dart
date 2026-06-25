@@ -3,7 +3,10 @@ import 'dart:async';
 import 'package:flarelane_flutter/flarelane_flutter.dart';
 import 'package:flutter/material.dart';
 
-const FLARELANE_PROJECT_ID = 'FLARELANE_PROJECT_ID';
+import 'webview_bridge_demo.dart';
+import 'webview_bridge_inappwebview_demo.dart';
+
+const FLARELANE_PROJECT_ID = 'a43cdc82-0ea5-4fdd-aebc-1940fe99b6c3';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,6 +35,8 @@ class _MyAppState extends State<MyApp> {
   bool _isSetUserId = false;
   bool _isSubscribed = false;
   bool _isSetTags = false;
+  bool _isSetUserAttributes = false;
+  bool _isSubscribedState = false;
 
   @override
   void initState() {
@@ -39,8 +44,14 @@ class _MyAppState extends State<MyApp> {
 
     FlareLane.shared.setNotificationClickedHandler((notification) {
       setState(() {
-        _clickedMessage =
-            '✅ Message of clickedHandler\n${notification.toString()}';
+        final btn = notification.clickedButton;
+        final btnLine = btn != null
+            ? '\nclickedButton: ${btn.label} (index=${notification.clickedButtonIndex}) link=${btn.link ?? "-"}'
+            : '\nclickedButton: (body click)';
+        _clickedMessage = '✅ Message of clickedHandler\n'
+            '${notification.toString()}'
+            '$btnLine'
+            '\nclickedUrl: ${notification.clickedUrl ?? "-"}';
       });
     });
 
@@ -69,6 +80,14 @@ class _MyAppState extends State<MyApp> {
 
     FlareLane.shared.displayInApp("home");
 
+    // Sync initial subscribe-toggle label with the actual SDK state so the
+    // first tap doesn't appear inverted (e.g. already-subscribed device showing
+    // "set"). isSubscribed is one-shot; the toggle handlers keep it in sync
+    // after that.
+    FlareLane.shared.isSubscribed().then((subscribed) {
+      if (mounted) setState(() => _isSubscribedState = subscribed);
+    });
+
     setState(() {
       _resState = 'FlareLane initialized.';
     });
@@ -77,16 +96,16 @@ class _MyAppState extends State<MyApp> {
   Future<void> toggleUserId() async {
     await FlareLane.shared
         .setUserId(_isSetUserId ? null : "myuser@flarelane.com");
-    _isSetUserId = !_isSetUserId;
+    setState(() => _isSetUserId = !_isSetUserId);
   }
 
   Future<void> toggleTags() async {
     if (!_isSetTags) {
       await FlareLane.shared.setTags({"age": 27, "gender": 'men'});
-      _isSetTags = true;
+      setState(() => _isSetTags = true);
     } else {
       await FlareLane.shared.setTags({"age": null, "gender": null});
-      _isSetTags = false;
+      setState(() => _isSetTags = false);
     }
   }
 
@@ -98,16 +117,18 @@ class _MyAppState extends State<MyApp> {
     await FlareLane.shared.trackEvent("test_event", {"test": "event"});
   }
 
-  Future<void> subscribe() async {
-    await FlareLane.shared.subscribe(true, (isSubscribed) {
-      print(isSubscribed);
-    });
-  }
-
-  Future<void> unsubscribe() async {
-    await FlareLane.shared.unsubscribe((isSubscribed) {
-      print(isSubscribed);
-    });
+  Future<void> toggleSubscribe() async {
+    if (!_isSubscribedState) {
+      await FlareLane.shared.subscribe(true, (subscribed) {
+        print('subscribe -> $subscribed');
+        setState(() => _isSubscribedState = subscribed);
+      });
+    } else {
+      await FlareLane.shared.unsubscribe((subscribed) {
+        print('unsubscribe -> $subscribed');
+        setState(() => _isSubscribedState = subscribed);
+      });
+    }
   }
 
   Future<void> isSubscribed() async {
@@ -117,6 +138,32 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> displayInApp() async {
     FlareLane.shared.displayInApp("home", {"test": "data", "test2": 123});
+  }
+
+  Future<void> toggleUserAttributes() async {
+    if (_isSetUserAttributes) {
+      await FlareLane.shared.setUserAttributes({
+        "name": null,
+        "email": null,
+        "phoneNumber": null,
+        "dob": null,
+        "timeZone": null,
+        "country": null,
+        "language": null,
+      });
+      setState(() => _isSetUserAttributes = false);
+    } else {
+      await FlareLane.shared.setUserAttributes({
+        "name": "Test User",
+        "email": "test@example.com",
+        "phoneNumber": "+821012345678",
+        "dob": "1990-01-01",
+        "timeZone": "Asia/Seoul",
+        "country": "KR",
+        "language": "ko",
+      });
+      setState(() => _isSetUserAttributes = true);
+    }
   }
 
   @override
@@ -131,21 +178,51 @@ class _MyAppState extends State<MyApp> {
           children: [
             Center(child: Text('$_resState\n\n$_clickedMessage')),
             OutlinedButton(
-                onPressed: toggleUserId, child: const Text("TOGGLE USER ID")),
+                onPressed: toggleUserId,
+                child: Text("TOGGLE USER ID (${_isSetUserId ? "del" : "set"})")),
             OutlinedButton(
-                onPressed: toggleTags, child: const Text("TOGGLE TAGS")),
+                onPressed: toggleTags,
+                child: Text("TOGGLE TAGS (${_isSetTags ? "del" : "set"})")),
+            OutlinedButton(
+                onPressed: toggleUserAttributes,
+                child: Text(
+                    "TOGGLE USER ATTRIBUTES (${_isSetUserAttributes ? "del" : "set"})")),
+            OutlinedButton(
+                onPressed: toggleSubscribe,
+                child: Text("TOGGLE SUBSCRIBE (${_isSubscribedState ? "del" : "set"})")),
             OutlinedButton(
                 onPressed: getDeviceId, child: const Text("PRINT DEVICE ID")),
             OutlinedButton(
                 onPressed: trackEvent, child: const Text("TRACK EVENT")),
             OutlinedButton(
-                onPressed: subscribe, child: const Text("SUBSCRIBE")),
-            OutlinedButton(
-                onPressed: unsubscribe, child: const Text("UNSUBSCRIBE")),
-            OutlinedButton(
                 onPressed: isSubscribed, child: const Text("ISSUBSCRIBED")),
             OutlinedButton(
-                onPressed: displayInApp, child: const Text("DISPLAY INAPP"))
+                onPressed: displayInApp, child: const Text("DISPLAY INAPP")),
+            const Padding(
+              padding: EdgeInsets.only(top: 12, bottom: 4),
+              child: Text(
+                'WebView Bridge',
+                style: TextStyle(fontSize: 12, color: Colors.grey),
+              ),
+            ),
+            OutlinedButton(
+                onPressed: () => Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (_) => const WebViewBridgeDemo(
+                          projectId: FLARELANE_PROJECT_ID,
+                        ),
+                      ),
+                    ),
+                child: const Text("webview_flutter")),
+            OutlinedButton(
+                onPressed: () => Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (_) => const WebViewBridgeInAppWebViewDemo(
+                          projectId: FLARELANE_PROJECT_ID,
+                        ),
+                      ),
+                    ),
+                child: const Text("flutter_inappwebview"))
           ],
         ),
       ),

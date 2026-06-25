@@ -31,6 +31,11 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
 
+  # WebView Bridge demo dependencies — two libraries are wired so the same
+  # FlareLane Web SDK end-to-end flow can be verified across packages.
+  webview_flutter: ^4.7.0
+  flutter_inappwebview: ^5.8.0
+
   # Other Libraries
 
 dev_dependencies:
@@ -58,6 +63,9 @@ flutter:
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
+
+  assets:
+    - assets/webview_websdk_test.html
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
