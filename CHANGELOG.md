@@ -2,7 +2,7 @@
 
 - Add `setUserAttributes` public method.
 - Add notification action button surface: `buttons`, `clickedButtonIndex`, `clickedButton`, `clickedUrl`.
-- Add `FlareLaneWebViewBridge` helper for hybrid apps (see README).
+- Add `FlareLaneJavascriptInterface` adapter for `webview_flutter` and `flutter_inappwebview` hybrid apps (see README).
 - Bump native dependencies to FlareLane Android/iOS SDK 1.10.0.
 
 ## 1.9.2

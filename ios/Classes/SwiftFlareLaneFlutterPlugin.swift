@@ -101,10 +101,13 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
     } else if (method == "_webViewSyncPayload") {
       // Helper-only entry: returns identifiers for the WebView bridge to
       // build a syncDeviceDataCallback payload. Not part of the public API.
-      let payload: [String: Any?] = [
-        "projectId": FlareLane.getProjectId(),
-        "deviceId": FlareLane.getDeviceId(),
-        "userId": FlareLane.getUserId()
+      // Map unset identifiers to NSNull explicitly — Flutter's standard
+      // codec encodes NSNull as Dart `null`, while a Swift `Optional.none`
+      // inside `[String: Any?]` is not a documented codec input.
+      let payload: [String: Any] = [
+        "projectId": FlareLane.getProjectId() ?? NSNull(),
+        "deviceId": FlareLane.getDeviceId() ?? NSNull(),
+        "userId": FlareLane.getUserId() ?? NSNull()
       ]
       result(payload)
     }

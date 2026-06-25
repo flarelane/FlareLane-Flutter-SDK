@@ -56,6 +56,41 @@ void main() {
       expect(calls.where((c) => c.method == '_webViewSyncPayload'), hasLength(1));
     });
 
+    test(
+        'syncDeviceData still emits a callback with null identifiers when native returns all nulls',
+        () async {
+      // Native (iOS/Android) sends an all-null map when the SDK hasn't
+      // resolved identifiers yet (pre-init / pre-handshake). The Web SDK
+      // still expects a syncDeviceDataCallback invocation so it can react
+      // to "no identifiers yet" instead of waiting indefinitely.
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(channel, (MethodCall call) async {
+        calls.add(call);
+        if (call.method == '_webViewSyncPayload') {
+          return <String, dynamic>{
+            'projectId': null,
+            'deviceId': null,
+            'userId': null,
+          };
+        }
+        return null;
+      });
+
+      final String? js =
+          await BridgeCore.handle(jsonEncode({'method': 'syncDeviceData'}));
+
+      expect(js, isNotNull);
+      final String jsonString = js!
+          .replaceFirst('FlareLane.syncDeviceDataCallback(', '')
+          .replaceFirst(RegExp(r'\);\s*$'), '');
+      final Map<String, dynamic> payload =
+          jsonDecode(jsonString) as Map<String, dynamic>;
+      expect(payload['projectId'], isNull);
+      expect(payload['deviceId'], isNull);
+      expect(payload['userId'], isNull);
+      expect(payload['platform'], anyOf(equals('ios'), equals('android')));
+    });
+
     test('setUserId forwards the userId to the native channel', () async {
       final String? js = await BridgeCore.handle(
         jsonEncode({'method': 'setUserId', 'userId': 'user-1'}),

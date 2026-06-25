@@ -24,25 +24,30 @@ class _WebViewBridgeDemoState extends State<WebViewBridgeDemo> {
   @override
   void initState() {
     super.initState();
-    _controller = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+    // The adapter factories read the controller eagerly, so build the
+    // controller into a local variable first, wire the bridge into that
+    // same instance, then publish it to the `_controller` field.
+    final controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted);
+    controller
       // additive slot — bridge channel sits alongside any customer-owned
       // channels added with different names.
       ..addJavaScriptChannel(
         FlareLaneJavascriptInterface.BRIDGE_NAME,
         onMessageReceived:
-            FlareLaneJavascriptInterface.onMessageReceived(_controller),
+            FlareLaneJavascriptInterface.onMessageReceived(controller),
       )
       // single-valued slot — compose adapter and customer callbacks. The
       // demo has no extra customer logic, but this is where it would go:
       //   onPageStarted: (url) async {
-      //     await FlareLaneJavascriptInterface.onPageStarted(_controller)(url);
+      //     await FlareLaneJavascriptInterface.onPageStarted(controller)(url);
       //     myExistingOnPageStarted(url);
       //   },
       ..setNavigationDelegate(NavigationDelegate(
         onPageStarted:
-            FlareLaneJavascriptInterface.onPageStarted(_controller),
+            FlareLaneJavascriptInterface.onPageStarted(controller),
       ));
+    _controller = controller;
     _loadAsset();
   }
 

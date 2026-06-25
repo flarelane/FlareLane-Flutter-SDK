@@ -26,12 +26,19 @@ add only the one you actually use to your own app's `pubspec.yaml`.
 
 ### webview_flutter
 
+The adapter factories take a `WebViewController` and read it eagerly, so
+construct the controller first, then wire the bridge into that same
+instance — don't reference the controller inside its own initialization
+cascade.
+
 ```dart
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:flarelane_flutter/adapters/webview_flutter.dart';
 
 final controller = WebViewController()
-  ..setJavaScriptMode(JavaScriptMode.unrestricted)
+  ..setJavaScriptMode(JavaScriptMode.unrestricted);
+
+controller
   // additive slot — adapter channel sits alongside your own channels.
   ..addJavaScriptChannel('MyChannel', onMessageReceived: myChannelHandler)
   ..addJavaScriptChannel(

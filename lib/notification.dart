@@ -21,6 +21,10 @@ class FlareLaneNotificationButton {
       link: link is String ? link : null,
     );
   }
+
+  @override
+  String toString() =>
+      'FlareLaneNotificationButton{label: $label, link: $link}';
 }
 
 /// Pure data class — every field is populated from the native bridge payload (no derived

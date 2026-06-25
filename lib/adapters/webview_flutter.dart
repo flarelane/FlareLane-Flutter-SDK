@@ -50,9 +50,13 @@ class FlareLaneJavascriptInterface {
   }
 
   /// Returns a callback ready to plug into
-  /// `NavigationDelegate(onPageStarted: …)`. Injects the bridge shim at the
-  /// start of every page load so the Web SDK can detect
-  /// `window.FlareLaneBridge` before its own scripts run.
+  /// `NavigationDelegate(onPageStarted: …)`. Injects the bridge shim near
+  /// the start of page load. `webview_flutter` does not expose a true
+  /// document-start hook, so an inline `<head>` script that reads
+  /// `window.FlareLaneBridge` synchronously may still run before the shim
+  /// on some platforms. For strict document-start timing, prefer the
+  /// `flutter_inappwebview` adapter (which uses `AT_DOCUMENT_START`
+  /// UserScript injection).
   static Future<void> Function(String) onPageStarted(
       WebViewController controller) {
     return (String url) async {

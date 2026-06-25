@@ -32,6 +32,10 @@ class _WebViewBridgeInAppWebViewDemoState
   Future<void> _loadAsset() async {
     String html =
         await rootBundle.loadString('assets/webview_websdk_test.html');
+    // The async asset load can resolve after this State is disposed (e.g. the
+    // user pops the route before the bundle finishes reading). Guard the
+    // setState so we don't touch an unmounted element.
+    if (!mounted) return;
     html = html
         .replaceAll('%PROJECT_ID%', widget.projectId)
         .replaceAll('%LIBRARY%', 'flutter_inappwebview');

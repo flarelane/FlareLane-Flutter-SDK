@@ -44,9 +44,13 @@ class _MyAppState extends State<MyApp> {
 
     FlareLane.shared.setNotificationClickedHandler((notification) {
       setState(() {
+        // `clickedButtonIndex` is the source of truth for "was a button
+        // tapped?" — `clickedButton` can be null even on a button click when
+        // native sent an out-of-range index (see FlareLaneNotification docs).
+        final btnIndex = notification.clickedButtonIndex;
         final btn = notification.clickedButton;
-        final btnLine = btn != null
-            ? '\nclickedButton: ${btn.label} (index=${notification.clickedButtonIndex}) link=${btn.link ?? "-"}'
+        final btnLine = btnIndex != null
+            ? '\nclickedButton: ${btn?.label ?? "(out-of-range)"} (index=$btnIndex) link=${btn?.link ?? "-"}'
             : '\nclickedButton: (body click)';
         _clickedMessage = '✅ Message of clickedHandler\n'
             '${notification.toString()}'
@@ -173,57 +177,60 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('FlareLane Example App'),
         ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Center(child: Text('$_resState\n\n$_clickedMessage')),
-            OutlinedButton(
-                onPressed: toggleUserId,
-                child: Text("TOGGLE USER ID (${_isSetUserId ? "del" : "set"})")),
-            OutlinedButton(
-                onPressed: toggleTags,
-                child: Text("TOGGLE TAGS (${_isSetTags ? "del" : "set"})")),
-            OutlinedButton(
-                onPressed: toggleUserAttributes,
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Center(child: Text('$_resState\n\n$_clickedMessage')),
+              OutlinedButton(
+                  onPressed: toggleUserId,
+                  child: Text("TOGGLE USER ID (${_isSetUserId ? "del" : "set"})")),
+              OutlinedButton(
+                  onPressed: toggleTags,
+                  child: Text("TOGGLE TAGS (${_isSetTags ? "del" : "set"})")),
+              OutlinedButton(
+                  onPressed: toggleUserAttributes,
+                  child: Text(
+                      "TOGGLE USER ATTRIBUTES (${_isSetUserAttributes ? "del" : "set"})")),
+              OutlinedButton(
+                  onPressed: toggleSubscribe,
+                  child: Text("TOGGLE SUBSCRIBE (${_isSubscribedState ? "del" : "set"})")),
+              OutlinedButton(
+                  onPressed: getDeviceId, child: const Text("PRINT DEVICE ID")),
+              OutlinedButton(
+                  onPressed: trackEvent, child: const Text("TRACK EVENT")),
+              OutlinedButton(
+                  onPressed: isSubscribed, child: const Text("ISSUBSCRIBED")),
+              OutlinedButton(
+                  onPressed: displayInApp, child: const Text("DISPLAY INAPP")),
+              const Padding(
+                padding: EdgeInsets.only(top: 12, bottom: 4),
                 child: Text(
-                    "TOGGLE USER ATTRIBUTES (${_isSetUserAttributes ? "del" : "set"})")),
-            OutlinedButton(
-                onPressed: toggleSubscribe,
-                child: Text("TOGGLE SUBSCRIBE (${_isSubscribedState ? "del" : "set"})")),
-            OutlinedButton(
-                onPressed: getDeviceId, child: const Text("PRINT DEVICE ID")),
-            OutlinedButton(
-                onPressed: trackEvent, child: const Text("TRACK EVENT")),
-            OutlinedButton(
-                onPressed: isSubscribed, child: const Text("ISSUBSCRIBED")),
-            OutlinedButton(
-                onPressed: displayInApp, child: const Text("DISPLAY INAPP")),
-            const Padding(
-              padding: EdgeInsets.only(top: 12, bottom: 4),
-              child: Text(
-                'WebView Bridge',
-                style: TextStyle(fontSize: 12, color: Colors.grey),
+                  'WebView Bridge',
+                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                ),
               ),
-            ),
-            OutlinedButton(
-                onPressed: () => Navigator.of(context).push(
-                      MaterialPageRoute<void>(
-                        builder: (_) => const WebViewBridgeDemo(
-                          projectId: FLARELANE_PROJECT_ID,
+              OutlinedButton(
+                  onPressed: () => Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (_) => const WebViewBridgeDemo(
+                            projectId: FLARELANE_PROJECT_ID,
+                          ),
                         ),
                       ),
-                    ),
-                child: const Text("webview_flutter")),
-            OutlinedButton(
-                onPressed: () => Navigator.of(context).push(
-                      MaterialPageRoute<void>(
-                        builder: (_) => const WebViewBridgeInAppWebViewDemo(
-                          projectId: FLARELANE_PROJECT_ID,
+                  child: const Text("webview_flutter")),
+              OutlinedButton(
+                  onPressed: () => Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (_) => const WebViewBridgeInAppWebViewDemo(
+                            projectId: FLARELANE_PROJECT_ID,
+                          ),
                         ),
                       ),
-                    ),
-                child: const Text("flutter_inappwebview"))
-          ],
+                  child: const Text("flutter_inappwebview"))
+            ],
+          ),
         ),
       ),
     );

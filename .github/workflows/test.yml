@@ -14,6 +14,10 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Workflow only runs `flutter test`; no push/PR creation, so the
+          # default GITHUB_TOKEN credentials don't need to persist on disk.
+          persist-credentials: false
 
       - name: Set up Flutter
         # subosito/flutter-action is the standard community action for installing Flutter on
