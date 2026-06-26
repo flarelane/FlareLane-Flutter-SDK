@@ -1,0 +1,33 @@
+name: Tests
+
+on:
+  pull_request:
+
+concurrency:
+  group: tests-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  flutter-test:
+    name: flutter test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Workflow only runs `flutter test`; no push/PR creation, so the
+          # default GITHUB_TOKEN credentials don't need to persist on disk.
+          persist-credentials: false
+
+      - name: Set up Flutter
+        # subosito/flutter-action is the standard community action for installing Flutter on
+        # GitHub-hosted runners. Pinning to a major tag lets minor updates roll in safely.
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run tests
+        run: flutter test

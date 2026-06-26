@@ -19,6 +19,9 @@ pluginManagement {
 plugins {
     id "dev.flutter.flutter-plugin-loader" version "1.0.0" // apply true
     id "com.android.application" version "8.3.2" apply false
+    // webview_flutter_android 4.12+ uses Kotlin 1.9.20+ `compilerOptions` DSL.
+    // KGP 1.9.25 officially supports AGP 8.3.x (1.9.22 only goes up to AGP 8.1).
+    id "org.jetbrains.kotlin.android" version "1.9.25" apply false
 }
 
 include ":app"

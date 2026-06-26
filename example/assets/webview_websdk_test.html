@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FlareLane WebView Bridge Test</title>
+  <script src="https://cdn.flarelane.com/WebSDK.js" charset="UTF-8"></script>
+  <style>
+    body {
+      font-family: -apple-system, sans-serif;
+      margin: 0; padding: 12px 14px;
+      color: #111;
+    }
+    h2 { margin: 0 0 8px; text-align: center; font-size: 17px; }
+    .library-tag {
+      display: inline-block;
+      margin: 0 auto 8px;
+      padding: 3px 10px;
+      font-size: 11px;
+      color: #fff;
+      background: #0a84ff;
+      border-radius: 999px;
+    }
+    .library-line { text-align: center; }
+    .status {
+      background: #f7f7f7;
+      border-radius: 8px;
+      padding: 8px 10px;
+      margin: 8px 0 12px;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+    .row { display: flex; align-items: flex-start; }
+    .row .mark { width: 18px; flex: none; }
+    .row .label { flex: 1; }
+    .row .detail {
+      margin-top: 2px;
+      color: #555;
+      font-size: 11px;
+      word-break: break-all;
+      white-space: pre-wrap;
+    }
+    .ok   .mark { color: #1aaf5d; }
+    .warn .mark { color: #c0922f; }
+    .fail .mark { color: #d6483a; }
+    .wait .mark { color: #999; }
+    button {
+      width: 100%; padding: 10px; margin: 4px 0;
+      background: #2c2c2c; color: #fff; border: none; border-radius: 8px;
+      font-size: 14px;
+    }
+    pre {
+      background: #f5f5f5; padding: 8px 10px; border-radius: 6px;
+      white-space: pre-wrap; word-break: break-all;
+      font-size: 11px; line-height: 1.4;
+      max-height: 180px; overflow: auto; margin: 8px 0 0;
+    }
+  </style>
+</head>
+<body>
+  <h2>WebView Bridge</h2>
+  <div class="library-line">
+    <span class="library-tag" id="libraryTag">webview: loading…</span>
+  </div>
+
+  <div class="status" id="status">
+    <div class="row wait" id="s-bridge">
+      <span class="mark">…</span>
+      <span class="label">Native bridge ready</span>
+    </div>
+    <div class="row wait" id="s-init">
+      <span class="mark">…</span>
+      <span class="label">FlareLane.initialize()</span>
+    </div>
+    <div class="row wait" id="s-sync">
+      <span class="mark">…</span>
+      <div style="flex:1;">
+        <div class="label">syncDeviceData (native → web)</div>
+        <div class="detail" id="s-sync-detail"></div>
+      </div>
+    </div>
+  </div>
+
+  <button id="setUserId">FlareLane.setUserId</button>
+  <button id="setTags">FlareLane.setTags</button>
+  <button id="trackEvent">FlareLane.trackEvent</button>
+  <button id="setUserAttributes">FlareLane.setUserAttributes</button>
+  <button id="displayInApp">FlareLane.displayInApp('home')</button>
+  <pre id="log">(log)</pre>
+
+  <script>
+    // Defaults applied when the page is opened standalone (no host overrides).
+    var DEFAULT_PROJECT_ID = 'a43cdc82-0ea5-4fdd-aebc-1940fe99b6c3';
+    var DEFAULT_LIBRARY = 'native';
+
+    function $(id) { return document.getElementById(id); }
+    function setRow(id, state, mark) {
+      var el = $(id);
+      el.classList.remove('wait','ok','warn','fail');
+      el.classList.add(state);
+      el.querySelector('.mark').innerText = mark;
+    }
+    function logLine(s) {
+      var prev = $('log').innerText;
+      $('log').innerText = s + '\n' + (prev === '(log)' ? '' : prev);
+    }
+    // Wait for whichever bridge surface the host exposes:
+    //   * RN/Flutter inject a JS shim that flips `__flareLaneBridgeInstalled`.
+    //   * iOS native sample uses WKScriptMessageHandler -> webkit.messageHandlers.
+    //   * Android native sample uses JavascriptInterface -> window.FlareLaneBridge.
+    function whenBridgeReady(cb) {
+      if (window.__flareLaneBridgeInstalled) return cb('shim');
+      if (typeof window.webkit !== 'undefined' &&
+          window.webkit.messageHandlers &&
+          window.webkit.messageHandlers.FlareLaneBridge) {
+        return cb('webkit');
+      }
+      if (typeof window.FlareLaneBridge === 'object' &&
+          typeof window.FlareLaneBridge.syncDeviceData === 'function') {
+        return cb('android');
+      }
+      setTimeout(function () { whenBridgeReady(cb); }, 50);
+    }
+    setTimeout(function () {
+      if ($('s-bridge').classList.contains('wait')) {
+        setRow('s-bridge', 'fail', '✗');
+        logLine('bridge not detected within 3s — host channel wiring missing?');
+      }
+    }, 3000);
+
+    whenBridgeReady(function (via) {
+      setRow('s-bridge', 'ok', '✓');
+      var projectId = window.__FLARELANE_PROJECT_ID__ || DEFAULT_PROJECT_ID;
+      var library = window.__FLARELANE_LIBRARY__ || DEFAULT_LIBRARY;
+      $('libraryTag').innerText = 'webview: ' + library + ' (bridge: ' + via + ')';
+
+      // Intercept syncDeviceDataCallback BEFORE initialize so the native
+      // response is never observed by an earlier `_orig` reference.
+      var _orig = FlareLane.syncDeviceDataCallback;
+      FlareLane.syncDeviceDataCallback = function (data) {
+        setRow('s-sync', 'ok', '✓');
+        $('s-sync-detail').innerText =
+          'projectId: ' + (data && data.projectId) +
+          '\ndeviceId: '  + (data && data.deviceId) +
+          '\nuserId: '    + (data && data.userId) +
+          '\nplatform: '  + (data && data.platform);
+        if (typeof _orig === 'function') _orig.call(FlareLane, data);
+      };
+      setTimeout(function () {
+        if ($('s-sync').classList.contains('wait')) {
+          setRow('s-sync', 'warn', '!');
+          $('s-sync-detail').innerText = 'no callback within 5s (check native bridge)';
+        }
+      }, 5000);
+
+      try {
+        FlareLane.initialize({ projectId: projectId });
+        setRow('s-init', 'ok', '✓');
+      } catch (e) {
+        setRow('s-init', 'fail', '✗');
+        logLine('initialize() threw: ' + e);
+      }
+    });
+
+    $('setUserId').onclick = function () {
+      FlareLane.setUserId('test_user');
+      logLine('> FlareLane.setUserId(test_user)');
+    };
+    $('setTags').onclick = function () {
+      FlareLane.setTags({ a: 'a', b: 'b' });
+      logLine('> FlareLane.setTags({a,b})');
+    };
+    $('trackEvent').onclick = function () {
+      FlareLane.trackEvent('webview_test', { x: 1 });
+      logLine('> FlareLane.trackEvent(webview_test)');
+    };
+    $('setUserAttributes').onclick = function () {
+      FlareLane.setUserAttributes({
+        name: 'Test User', email: 'test@example.com', phoneNumber: '+821012345678',
+        dob: '1990-01-01', timeZone: 'Asia/Seoul', country: 'KR', language: 'ko'
+      });
+      logLine('> FlareLane.setUserAttributes');
+    };
+    $('displayInApp').onclick = function () {
+      FlareLane.displayInApp('home');
+      logLine('> FlareLane.displayInApp(home)');
+    };
+  </script>
+</body>
+</html>

@@ -59,6 +59,13 @@ class FlareLane {
     await _channel.invokeMethod('setTags', tags);
   }
 
+  /// Set user attributes (name/email/phoneNumber/dob/timeZone/country/language, etc.).
+  /// Sent only when userId is set, matching Web SDK behavior.
+  Future<void> setUserAttributes(Map<String, Object?> attributes) async {
+    debugPrint('[FlareLane] setUserAttributes: $attributes');
+    await _channel.invokeMethod('setUserAttributes', attributes);
+  }
+
   Future<bool> isSubscribed() async {
     final bool _isSubscribed = await _channel.invokeMethod('isSubscribed');
     return _isSubscribed;

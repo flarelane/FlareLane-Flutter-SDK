@@ -19,7 +19,7 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
     // Register appDelegate
     registrar.addApplicationDelegate(instance)
 
-    FlareLane.setSdkInfo(sdkType: .flutter, sdkVersion: "1.9.2")
+    FlareLane.setSdkInfo(sdkType: .flutter, sdkVersion: "1.10.0")
   }
 
   // ----- FLUTTER INVOKE HANDLER -----
@@ -94,6 +94,22 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
       result(true)
     } else if (method == "getDeviceId") {
       result(self.getDeviceId())
+    } else if (method == "setUserAttributes") {
+      let attributes = call.arguments as? [String: Any] ?? [:]
+      self.setUserAttributes(attributes: attributes)
+      result(true)
+    } else if (method == "_webViewSyncPayload") {
+      // Helper-only entry: returns identifiers for the WebView bridge to
+      // build a syncDeviceDataCallback payload. Not part of the public API.
+      // Map unset identifiers to NSNull explicitly — Flutter's standard
+      // codec encodes NSNull as Dart `null`, while a Swift `Optional.none`
+      // inside `[String: Any?]` is not a documented codec input.
+      let payload: [String: Any] = [
+        "projectId": FlareLane.getProjectId() ?? NSNull(),
+        "deviceId": FlareLane.getDeviceId() ?? NSNull(),
+        "userId": FlareLane.getUserId() ?? NSNull()
+      ]
+      result(payload)
     }
     else {
       result(false)
@@ -137,6 +153,10 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
 
   func setTags(tags: [String: Any]) {
     FlareLane.setTags(tags: tags)
+  }
+
+  func setUserAttributes(attributes: [String: Any]) {
+    FlareLane.setUserAttributes(attributes: attributes)
   }
 
   func trackEvent(type: String, data: [String: Any]?) {

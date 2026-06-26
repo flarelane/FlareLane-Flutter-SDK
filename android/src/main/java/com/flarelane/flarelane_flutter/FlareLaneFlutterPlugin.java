@@ -48,7 +48,7 @@ public class FlareLaneFlutterPlugin implements FlutterPlugin, MethodCallHandler 
     channel.setMethodCallHandler(this);
 
     FlareLane.SdkInfo.type = SdkType.FLUTTER;
-    FlareLane.SdkInfo.version = "1.9.2";
+    FlareLane.SdkInfo.version = "1.10.0";
   }
 
   @Override
@@ -142,6 +142,29 @@ public class FlareLaneFlutterPlugin implements FlutterPlugin, MethodCallHandler 
         final JSONObject data = _data instanceof HashMap ? new JSONObject((HashMap<String, Object>) _data) : null;
         FlareLane.displayInApp(mContext, group, data);
         result.success(true);
+      } else if (call.method.equals("setUserAttributes")) {
+        final HashMap<String, Object> attributes = call.arguments();
+        final JSONObject json = attributes != null ? new JSONObject(attributes) : new JSONObject();
+        FlareLane.setUserAttributes(mContext, json);
+        result.success(true);
+      } else if (call.method.equals("_webViewSyncPayload")) {
+        // Helper-only entry: returns identifiers for the WebView bridge to
+        // build a syncDeviceDataCallback payload. Not part of the public API.
+        // On internal failure return an all-null normalized map (matches the
+        // RN bridge) so the Web SDK still sees a syncDeviceDataCallback
+        // invocation instead of nothing.
+        HashMap<String, Object> payload = new HashMap<>();
+        try {
+          payload.put("projectId", FlareLane.getProjectId(mContext));
+          payload.put("deviceId", FlareLane.getDeviceId(mContext));
+          payload.put("userId", FlareLane.getUserId(mContext));
+        } catch (Exception e) {
+          Log.e("FlareLane", Log.getStackTraceString(e));
+          payload.put("projectId", null);
+          payload.put("deviceId", null);
+          payload.put("userId", null);
+        }
+        result.success(payload);
       } else {
         result.notImplemented();
       }
