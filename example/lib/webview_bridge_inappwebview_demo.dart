@@ -54,7 +54,7 @@ class _WebViewBridgeInAppWebViewDemoState
             InAppWebView(
               initialData: InAppWebViewInitialData(
                 data: _html!,
-                baseUrl: Uri.parse('https://localhost'),
+                baseUrl: WebUri('https://localhost'),
               ),
               // additive slot — adapter UserScripts sit alongside any
               // customer-owned scripts. Spread to merge:

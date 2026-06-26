@@ -10,16 +10,19 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  # Webview adapters under `lib/adapters/` import these. Bundled as regular
+  # deps because pub.dev requires lib/ imports to live in `dependencies`,
+  # and Dart has no peerDependencies/optional-deps equivalent. Ranges declare
+  # the adapter's verified compatibility surface; see each adapter's doc
+  # comment for the exact range. Customers who don't use the adapters incur
+  # only a small native footprint (Dart tree-shakes unused imports).
+  webview_flutter: '>=4.0.0 <5.0.0'
+  flutter_inappwebview: '>=5.0.0 <7.0.0'
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^1.0.0
-  # Webview adapters under `lib/adapters/` import these packages. They're
-  # dev-only deps so consumers of this SDK don't pull them in — customers
-  # add only the library they actually use to their own app pubspec.
-  webview_flutter: ^4.7.0
-  flutter_inappwebview: ^5.8.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -7,6 +7,10 @@ import '../src/bridge_core.dart';
 /// protocol (`BridgeCore.javaScriptInjection` + `handle`) is
 /// reused as-is from the low-level core.
 ///
+/// Compatible with `webview_flutter: '>=4.0.0 <5.0.0'`. Only `WebViewController`,
+/// `JavaScriptMessage`, and `runJavaScript(String)` are touched — these have
+/// been stable across the entire 4.x series.
+///
 /// Customers wire their `WebViewController` as usual — the adapter members
 /// (`onMessageReceived(controller)`, `onPageStarted(controller)`) drop into
 /// the matching slot 1:1 by name.

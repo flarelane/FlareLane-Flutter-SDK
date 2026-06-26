@@ -20,6 +20,12 @@ const String _channelAdapter = '''
 /// shape that matches `flutter_inappwebview`'s `InAppWebView` widget slots
 /// (`initialUserScripts`, `addJavaScriptHandler` via `onWebViewCreated`).
 ///
+/// Compatible with `flutter_inappwebview: '>=5.0.0 <7.0.0'`. The 6.x major
+/// migration only broke URL-typed APIs (`Uri` → `WebUri`), which this adapter
+/// does not touch — `UserScript`, `UserScriptInjectionTime.AT_DOCUMENT_START`,
+/// `InAppWebViewController`, and `evaluateJavascript(source:)` are stable
+/// across both 5.x and 6.x.
+///
 /// Example — alongside the customer's existing user scripts / handlers:
 ///
 /// ```dart

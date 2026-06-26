@@ -34,7 +34,7 @@ dependencies:
   # WebView Bridge demo dependencies — two libraries are wired so the same
   # FlareLane Web SDK end-to-end flow can be verified across packages.
   webview_flutter: ^4.7.0
-  flutter_inappwebview: ^5.8.0
+  flutter_inappwebview: ^6.0.0
 
   # Other Libraries
 
