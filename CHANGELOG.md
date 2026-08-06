@@ -1,3 +1,8 @@
+## 1.10.2
+
+- Bump native dependencies to FlareLane Android SDK 1.10.1 / iOS SDK 1.10.2 (in-app message callback reliability fixes).
+- Align plugin version with the latest native SDK version (1.10.2); 1.10.1 was skipped.
+
 ## 1.10.0
 
 - Add `setUserAttributes` public method.
