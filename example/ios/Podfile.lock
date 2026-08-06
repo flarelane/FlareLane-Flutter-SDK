@@ -1,6 +1,6 @@
 PODS:
   - FlareLane (1.10.2)
-  - flarelane_flutter (1.10.1):
+  - flarelane_flutter (1.10.2):
     - FlareLane (= 1.10.2)
     - Flutter
   - Flutter (1.0.0)
@@ -40,7 +40,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   FlareLane: 33130b6f4b78ccaa610d1d94d3ddefa14c5cfc49
-  flarelane_flutter: f8a1267cb7b349ce821debc67328a3ef8a443e1e
+  flarelane_flutter: 6d3cd3f917b018adfc3cb463f42e8b079f05584e
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   flutter_inappwebview_ios: b89ba3482b96fb25e00c967aae065701b66e9b99
   OrderedSet: e539b66b644ff081c73a262d24ad552a69be3a94
