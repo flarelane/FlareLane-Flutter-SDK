@@ -1,3 +1,8 @@
+## 1.10.3
+
+- Bump native iOS dependency to FlareLane iOS SDK 1.10.3 (fixes action buttons not displaying in some environments such as iOS 16).
+- Align plugin version with the latest native SDK version (1.10.3).
+
 ## 1.10.2
 
 - Bump native dependencies to FlareLane Android SDK 1.10.1 / iOS SDK 1.10.2 (in-app message callback reliability fixes).
