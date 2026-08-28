@@ -1,7 +1,7 @@
 PODS:
-  - FlareLane (1.10.3)
-  - flarelane_flutter (1.10.3):
-    - FlareLane (= 1.10.3)
+  - FlareLane (1.11.2)
+  - flarelane_flutter (1.11.2):
+    - FlareLane (= 1.11.2)
     - Flutter
   - Flutter (1.0.0)
   - flutter_inappwebview_ios (0.0.1):
@@ -17,7 +17,7 @@ PODS:
     - FlutterMacOS
 
 DEPENDENCIES:
-  - FlareLane (= 1.10.3)
+  - FlareLane (= 1.11.2)
   - flarelane_flutter (from `.symlinks/plugins/flarelane_flutter/ios`)
   - Flutter (from `Flutter`)
   - flutter_inappwebview_ios (from `.symlinks/plugins/flutter_inappwebview_ios/ios`)
@@ -39,13 +39,13 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/webview_flutter_wkwebview/darwin"
 
 SPEC CHECKSUMS:
-  FlareLane: b9b0f5301e9ab55931a0a45747ec90cfdf9e977d
-  flarelane_flutter: a81deab36d349e487841cba7438214062d0a29ff
+  FlareLane: cd2195241afe77a249414de9c0b3c293f6c13f7c
+  flarelane_flutter: 804a88a97155cdfa1cc9d38f53925c6c6058920e
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   flutter_inappwebview_ios: b89ba3482b96fb25e00c967aae065701b66e9b99
   OrderedSet: e539b66b644ff081c73a262d24ad552a69be3a94
   webview_flutter_wkwebview: 8ebf4fded22593026f7dbff1fbff31ea98573c8d
 
-PODFILE CHECKSUM: a7ed1cc4b596ba695f7211facecd5d4cc2b1a21b
+PODFILE CHECKSUM: b468853e86895a55555b527506e372b14e3791c3
 
 COCOAPODS: 1.16.2

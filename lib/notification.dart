@@ -27,6 +27,26 @@ class FlareLaneNotificationButton {
       'FlareLaneNotificationButton{label: $label, link: $link}';
 }
 
+/// Chat-style (communication notification) sender attached to a push.
+class FlareLaneNotificationCommunication {
+  late String senderName;
+  late String senderImageUrl;
+
+  FlareLaneNotificationCommunication(this.senderName, this.senderImageUrl);
+
+  /// Returns null when a required field is missing, mirroring the native parsers.
+  static FlareLaneNotificationCommunication? fromJson(Map json) {
+    final senderName = json['senderName'];
+    final senderImageUrl = json['senderImageUrl'];
+    if (senderName is! String || senderImageUrl is! String) return null;
+    return FlareLaneNotificationCommunication(senderName, senderImageUrl);
+  }
+
+  @override
+  String toString() =>
+      'FlareLaneNotificationCommunication{senderName: $senderName, senderImageUrl: $senderImageUrl}';
+}
+
 /// Pure data class — every field is populated from the native bridge payload (no derived
 /// logic, no branching). Native (Android/iOS) is the single source of truth for "what was
 /// clicked / where to go"; this layer just reflects what it was handed. Keep it that way
@@ -39,6 +59,13 @@ class FlareLaneNotification {
   String? imageUrl;
   Map? data;
   List<FlareLaneNotificationButton>? buttons;
+
+  /// Notification grouping key (iOS thread-id / Android group). Present when the push was
+  /// sent with `threadId`.
+  String? threadId;
+
+  /// Chat-style sender info, present when the push was sent as a communication notification.
+  FlareLaneNotificationCommunication? communication;
 
   /// Index of the action button that was tapped, or `null` for a body click. Doubles as the
   /// "was it a button click?" check via `notification.clickedButtonIndex != null`.
@@ -73,6 +100,13 @@ class FlareLaneNotification {
           .whereType<FlareLaneNotificationButton>()
           .toList();
     }
+    if (json['threadId'] is String) {
+      threadId = json['threadId'] as String?;
+    }
+    if (json['communication'] is Map) {
+      communication =
+          FlareLaneNotificationCommunication.fromJson(json['communication'] as Map);
+    }
     if (json['clickedButtonIndex'] is int) {
       clickedButtonIndex = json['clickedButtonIndex'] as int;
     }
@@ -86,6 +120,6 @@ class FlareLaneNotification {
 
   @override
   String toString() {
-    return 'FlareLaneNotification{id: $id, title: $title, body: $body, url: $url, imageUrl: $imageUrl, data: $data, buttons: $buttons, clickedButtonIndex: $clickedButtonIndex, clickedButton: $clickedButton, clickedUrl: $clickedUrl}';
+    return 'FlareLaneNotification{id: $id, title: $title, body: $body, url: $url, imageUrl: $imageUrl, data: $data, buttons: $buttons, threadId: $threadId, communication: $communication, clickedButtonIndex: $clickedButtonIndex, clickedButton: $clickedButton, clickedUrl: $clickedUrl}';
   }
 }

@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import '../flarelane_flutter.dart';
+import 'logger.dart';
 
 /// Internal bridge core shared by the webview library adapters under
 /// `lib/adapters/`. Not part of the package's public API — consumers should
@@ -36,13 +36,13 @@ class BridgeCore {
     try {
       final dynamic raw = jsonDecode(message);
       if (raw is! Map) {
-        debugPrint('[FlareLane] WebView bridge ignored non-object message');
+        Logger.verbose('WebView bridge ignored non-object message');
         return null;
       }
       final Map<String, dynamic> body = raw.cast<String, dynamic>();
       final String? method = body['method'] as String?;
       if (method == null) {
-        debugPrint('[FlareLane] WebView bridge message missing "method"');
+        Logger.verbose('WebView bridge message missing "method"');
         return null;
       }
 
@@ -61,7 +61,7 @@ class BridgeCore {
         case 'trackEvent':
           final String? type = body['type'] as String?;
           if (type == null) {
-            debugPrint('[FlareLane] trackEvent missing "type"');
+            Logger.verbose('trackEvent missing "type"');
             return null;
           }
           final Map? data = body['data'] as Map?;
@@ -76,11 +76,11 @@ class BridgeCore {
           }
           return null;
         default:
-          debugPrint('[FlareLane] WebView bridge unknown method: $method');
+          Logger.verbose('WebView bridge unknown method: $method');
           return null;
       }
     } catch (e) {
-      debugPrint('[FlareLane] WebView bridge handle failed: $e');
+      Logger.error('WebView bridge handle failed: $e');
       return null;
     }
   }
@@ -96,7 +96,7 @@ class BridgeCore {
       payload['platform'] = Platform.isIOS ? 'ios' : 'android';
       return 'FlareLane.syncDeviceDataCallback(${jsonEncode(payload)});';
     } catch (e) {
-      debugPrint('[FlareLane] _webViewSyncPayload failed: $e');
+      Logger.error('_webViewSyncPayload failed: $e');
       return null;
     }
   }
