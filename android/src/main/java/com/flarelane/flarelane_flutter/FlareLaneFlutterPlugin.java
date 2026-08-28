@@ -168,8 +168,9 @@ public class FlareLaneFlutterPlugin implements FlutterPlugin, MethodCallHandler 
           payload.put("deviceId", FlareLane.getDeviceId(mContext));
           payload.put("userId", FlareLane.getUserId(mContext));
         } catch (Exception e) {
-          // Dart logs this through its own gated Logger; keep the native side quiet so the
-          // failure isn't reported twice and isn't printed at LogLevel.none.
+          // The Dart catch never sees this failure (the null payload returns as success),
+          // so it is logged here — same as every released version.
+          android.util.Log.e("FlareLane", android.util.Log.getStackTraceString(e));
           payload.put("projectId", null);
           payload.put("deviceId", null);
           payload.put("userId", null);
