@@ -3,7 +3,6 @@ package com.flarelane.flarelane_flutter;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -48,7 +47,17 @@ public class FlareLaneFlutterPlugin implements FlutterPlugin, MethodCallHandler 
     channel.setMethodCallHandler(this);
 
     FlareLane.SdkInfo.type = SdkType.FLUTTER;
-    FlareLane.SdkInfo.version = "1.10.2";
+    FlareLane.SdkInfo.version = "1.11.2";
+  }
+
+  /**
+   * Maps the SDK-wide log level (none=0, error=1, verbose=5 — identical on every platform) to
+   * the android.util.Log scale the Android SDK's public API takes.
+   */
+  private static int toAndroidLogLevel(int level) {
+    if (level >= 5) return FlareLane.LOG_LEVEL_VERBOSE;
+    if (level >= 1) return FlareLane.LOG_LEVEL_ERROR;
+    return FlareLane.LOG_LEVEL_NONE;
   }
 
   @Override
@@ -62,7 +71,7 @@ public class FlareLaneFlutterPlugin implements FlutterPlugin, MethodCallHandler 
         result.success(true);
       } else if (call.method.equals("setLogLevel")) {
         final int intLogLevel = call.arguments();
-        FlareLane.setLogLevel(intLogLevel);
+        FlareLane.setLogLevel(toAndroidLogLevel(intLogLevel));
         result.success(true);
       } else if (call.method.equals("setUserId")) {
         final String userId = call.arguments();
@@ -159,7 +168,9 @@ public class FlareLaneFlutterPlugin implements FlutterPlugin, MethodCallHandler 
           payload.put("deviceId", FlareLane.getDeviceId(mContext));
           payload.put("userId", FlareLane.getUserId(mContext));
         } catch (Exception e) {
-          Log.e("FlareLane", Log.getStackTraceString(e));
+          // The Dart catch never sees this failure (the null payload returns as success),
+          // so it is logged here — same as every released version.
+          android.util.Log.e("FlareLane", android.util.Log.getStackTraceString(e));
           payload.put("projectId", null);
           payload.put("deviceId", null);
           payload.put("userId", null);

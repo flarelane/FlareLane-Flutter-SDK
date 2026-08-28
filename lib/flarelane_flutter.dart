@@ -1,11 +1,12 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flarelane_flutter/in_app_message.dart';
 import 'package:flarelane_flutter/notification.dart';
 import 'package:flarelane_flutter/notification_received_event.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flarelane_flutter/src/logger.dart';
 import 'package:flutter/services.dart';
+
+export 'package:flarelane_flutter/src/logger.dart' show LogLevel;
 
 typedef NotificationClickedHandler = void Function(
     FlareLaneNotification notification);
@@ -15,8 +16,6 @@ typedef InAppMessageActionHandler = void Function(
     InAppMessage iam, String actionId);
 typedef GetTagsHandler = void Function(Map<String, dynamic> tags);
 typedef IsSubscribedHandler = void Function(bool isSubscribed);
-
-enum LogLevel { none, error, verbose }
 
 class FlareLane {
   static FlareLane shared = FlareLane();
@@ -41,28 +40,31 @@ class FlareLane {
       "requestPermissionOnLaunch": requestPermissionOnLaunch
     });
     result
-        ? debugPrint('[FlareLane] initialize completed.')
-        : debugPrint('[FlareLane] initialize failed.');
+        ? Logger.verbose('initialize completed.')
+        : Logger.error('initialize failed.');
   }
 
   Future<void> setLogLevel(LogLevel logLevel) async {
-    await _channel.invokeMethod('setLogLevel', _convertLoglevel(logLevel));
+    // Apply on the Dart side first: the channel hop is async, so anything logged in between
+    // would otherwise still use the previous level.
+    Logger.level = logLevel;
+    await _channel.invokeMethod('setLogLevel', logLevel.value);
   }
 
   Future<void> setUserId(String? userId) async {
-    debugPrint('[FlareLane] setUserId: $userId');
+    Logger.verbose('setUserId: $userId');
     await _channel.invokeMethod('setUserId', userId);
   }
 
   Future<void> setTags(Map<String, Object?> tags) async {
-    debugPrint('[FlareLane] setTags: $tags');
+    Logger.verbose('setTags: $tags');
     await _channel.invokeMethod('setTags', tags);
   }
 
   /// Set user attributes (name/email/phoneNumber/dob/timeZone/country/language, etc.).
   /// Sent only when userId is set, matching Web SDK behavior.
   Future<void> setUserAttributes(Map<String, Object?> attributes) async {
-    debugPrint('[FlareLane] setUserAttributes: $attributes');
+    Logger.verbose('setUserAttributes: $attributes');
     await _channel.invokeMethod('setUserAttributes', attributes);
   }
 
@@ -116,7 +118,7 @@ class FlareLane {
   }
 
   Future<void> trackEvent(String type, [Map<String, Object>? data]) async {
-    debugPrint('[FlareLane] trackEvent: $type, $data');
+    Logger.verbose('trackEvent: $type, $data');
     await _channel.invokeMethod('trackEvent', {"type": type, "data": data});
   }
 
@@ -144,24 +146,4 @@ class FlareLane {
     }
   }
 
-  int _convertLoglevel(LogLevel logLevel) {
-    const iOSLogLevel = {
-      LogLevel.none: 0,
-      LogLevel.error: 1,
-      LogLevel.verbose: 5
-    };
-    const androidLogLevel = {
-      LogLevel.none: 10,
-      LogLevel.error: 6,
-      LogLevel.verbose: 2
-    };
-
-    if (Platform.isIOS) {
-      return iOSLogLevel[logLevel] ?? iOSLogLevel[LogLevel.verbose]!;
-    } else if (Platform.isAndroid) {
-      return androidLogLevel[logLevel] ?? androidLogLevel[LogLevel.verbose]!;
-    } else {
-      throw "Unknown Platform";
-    }
-  }
 }

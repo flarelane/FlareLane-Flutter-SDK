@@ -33,10 +33,9 @@ class _MyAppState extends State<MyApp> {
   String _resState = '';
   String _clickedMessage = '';
   bool _isSetUserId = false;
-  bool _isSubscribed = false;
   bool _isSetTags = false;
   bool _isSetUserAttributes = false;
-  bool _isSubscribedState = false;
+  LogLevel _logLevel = LogLevel.verbose;
 
   @override
   void initState() {
@@ -82,15 +81,6 @@ class _MyAppState extends State<MyApp> {
       });
     });
 
-    FlareLane.shared.displayInApp("home");
-
-    // Sync initial subscribe-toggle label with the actual SDK state so the
-    // first tap doesn't appear inverted (e.g. already-subscribed device showing
-    // "set"). isSubscribed is one-shot; the toggle handlers keep it in sync
-    // after that.
-    FlareLane.shared.isSubscribed().then((subscribed) {
-      if (mounted) setState(() => _isSubscribedState = subscribed);
-    });
 
     setState(() {
       _resState = 'FlareLane initialized.';
@@ -121,23 +111,30 @@ class _MyAppState extends State<MyApp> {
     await FlareLane.shared.trackEvent("test_event", {"test": "event"});
   }
 
-  Future<void> toggleSubscribe() async {
-    if (!_isSubscribedState) {
-      await FlareLane.shared.subscribe(true, (subscribed) {
-        print('subscribe -> $subscribed');
-        setState(() => _isSubscribedState = subscribed);
-      });
-    } else {
-      await FlareLane.shared.unsubscribe((subscribed) {
-        print('unsubscribe -> $subscribed');
-        setState(() => _isSubscribedState = subscribed);
-      });
-    }
+  Future<void> subscribe() async {
+    await FlareLane.shared.subscribe(true, (subscribed) {
+      print('subscribe -> $subscribed');
+    });
+  }
+
+  Future<void> unsubscribe() async {
+    await FlareLane.shared.unsubscribe((subscribed) {
+      print('unsubscribe -> $subscribed');
+    });
   }
 
   Future<void> isSubscribed() async {
     final bool isSubscribed = await FlareLane.shared.isSubscribed();
     print(isSubscribed);
+  }
+
+  /// Cycles verbose -> error -> none so the level gate can be checked on a device:
+  /// at `none` neither the Dart layer nor the native SDK should print anything.
+  Future<void> cycleLogLevel() async {
+    const order = [LogLevel.verbose, LogLevel.error, LogLevel.none];
+    final next = order[(order.indexOf(_logLevel) + 1) % order.length];
+    await FlareLane.shared.setLogLevel(next);
+    setState(() => _logLevel = next);
   }
 
   Future<void> displayInApp() async {
@@ -194,8 +191,12 @@ class _MyAppState extends State<MyApp> {
                   child: Text(
                       "TOGGLE USER ATTRIBUTES (${_isSetUserAttributes ? "del" : "set"})")),
               OutlinedButton(
-                  onPressed: toggleSubscribe,
-                  child: Text("TOGGLE SUBSCRIBE (${_isSubscribedState ? "del" : "set"})")),
+                  onPressed: cycleLogLevel,
+                  child: Text("LOG LEVEL (${_logLevel.name})")),
+              OutlinedButton(
+                  onPressed: subscribe, child: const Text("SUBSCRIBE")),
+              ElevatedButton(
+                  onPressed: unsubscribe, child: const Text("UNSUBSCRIBE")),
               OutlinedButton(
                   onPressed: getDeviceId, child: const Text("PRINT DEVICE ID")),
               OutlinedButton(
