@@ -1,3 +1,8 @@
+## 1.11.3
+
+- Bump native FlareLane Android/iOS SDKs to 1.11.3: a notification tap now resumes the app's existing task as-is instead of relaunching the main activity (Android), and idempotent POST retries carry an `Idempotency-Key` header.
+- Minimum supported iOS version raised to 15.0 (required by Xcode 27).
+
 ## 1.11.2
 
 - Bump native FlareLane Android/iOS SDKs to 1.11.2: transient network failures retry automatically with jittered backoff, `trackEvent` payloads carry a client-generated `insertId` so the backend can deduplicate resends, a 410 from a device endpoint stops the SDK for the rest of the process, and the pending task queue is bounded at 100 tasks.
