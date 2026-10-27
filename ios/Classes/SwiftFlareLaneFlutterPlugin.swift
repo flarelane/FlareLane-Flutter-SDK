@@ -31,7 +31,9 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
       let arguments = call.arguments as! [String: Any?]
       let projectId = arguments["projectId"] as! String
       let requestPermissionOnLaunch = arguments["requestPermissionOnLaunch"] as? Bool ?? true
-      self.initialize(projectId: projectId, requestPermissionOnLaunch: requestPermissionOnLaunch)
+      // Dart null arrives as NSNull, which `as? String` maps to nil (= "us").
+      let region = arguments["region"] as? String
+      self.initialize(projectId: projectId, region: region, requestPermissionOnLaunch: requestPermissionOnLaunch)
       result(true)
     } else if (method == "setLogLevel") {
       let logLevel = call.arguments as! Int
@@ -107,7 +109,8 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
       let payload: [String: Any] = [
         "projectId": FlareLane.getProjectId() ?? NSNull(),
         "deviceId": FlareLane.getDeviceId() ?? NSNull(),
-        "userId": FlareLane.getUserId() ?? NSNull()
+        "userId": FlareLane.getUserId() ?? NSNull(),
+        "region": FlareLane.getRegion() ?? NSNull()
       ]
       result(payload)
     }
@@ -123,9 +126,9 @@ public class SwiftFlareLaneFlutterPlugin: NSObject, FlutterPlugin {
     FlareLane.setLogLevel(level: level)
   }
 
-  func initialize (projectId: String, requestPermissionOnLaunch: Bool = true) {
+  func initialize (projectId: String, region: String?, requestPermissionOnLaunch: Bool = true) {
     let launchOptions = self.launchOptions
-    FlareLane.initWithLaunchOptions(launchOptions, projectId: projectId, requestPermissionOnLaunch: requestPermissionOnLaunch)
+    FlareLane.initWithLaunchOptions(launchOptions, projectId: projectId, region: region, requestPermissionOnLaunch: requestPermissionOnLaunch)
     self.launchOptions = nil
   }
 

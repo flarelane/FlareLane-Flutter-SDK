@@ -2,12 +2,24 @@
 
 Welcome to [FlareLane](https://flarelane.com)
 
+## Region
+
+Projects created in the Seoul region must pass `region: 'kr'`; existing
+projects omit it (defaults to `us`).
+
+```dart
+await FlareLane.shared.initialize('PROJECT_ID', region: 'kr');
+```
+
+The native SDK validates the value: a malformed region (including an empty
+string) logs an error and the SDK does not initialize.
+
 ## WebView Bridge (hybrid apps)
 
 For hybrid apps that embed pages running the FlareLane Web SDK, the plugin
-exposes a bridge so identity (`deviceId` / `userId` / `projectId`) and SDK
-calls (`setUserId`, `setTags`, `trackEvent`, `setUserAttributes`,
-`syncDeviceData`) stay aligned between native and web.
+exposes a bridge so identity (`deviceId` / `userId` / `projectId` /
+`region`) and SDK calls (`setUserId`, `setTags`, `trackEvent`,
+`setUserAttributes`, `syncDeviceData`) stay aligned between native and web.
 
 The bridge name and class name match the native Android/iOS SDKs:
 `FlareLaneJavascriptInterface` + `BRIDGE_NAME`. The plugin ships

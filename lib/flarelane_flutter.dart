@@ -33,11 +33,15 @@ class FlareLane {
 
   // ----- PUBLIC METHODS -----
 
+  /// [region] selects the API host: omit it (or pass "us") for existing
+  /// projects, pass "kr" for Seoul-region projects. The native SDK validates
+  /// it and does not initialize on a malformed value.
   Future<void> initialize(String projectId,
-      {bool? requestPermissionOnLaunch = true}) async {
+      {bool? requestPermissionOnLaunch = true, String? region}) async {
     final bool result = await _channel.invokeMethod('initialize', {
       "projectId": projectId,
-      "requestPermissionOnLaunch": requestPermissionOnLaunch
+      "requestPermissionOnLaunch": requestPermissionOnLaunch,
+      "region": region
     });
     result
         ? Logger.verbose('initialize completed.')

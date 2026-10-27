@@ -24,6 +24,7 @@ void main() {
           'projectId': 'P',
           'deviceId': 'D',
           'userId': 'U',
+          'region': 'kr',
         };
       }
       return null;
@@ -36,7 +37,7 @@ void main() {
   });
 
   group('BridgeCore.handle', () {
-    test('syncDeviceData returns callback JS with the four canonical fields',
+    test('syncDeviceData returns callback JS with the five canonical fields',
         () async {
       final String? js =
           await BridgeCore.handle(jsonEncode({'method': 'syncDeviceData'}));
@@ -52,6 +53,7 @@ void main() {
       expect(payload['projectId'], equals('P'));
       expect(payload['deviceId'], equals('D'));
       expect(payload['userId'], equals('U'));
+      expect(payload['region'], equals('kr'));
       expect(payload['platform'], anyOf(equals('ios'), equals('android')));
       expect(calls.where((c) => c.method == '_webViewSyncPayload'), hasLength(1));
     });
@@ -71,6 +73,7 @@ void main() {
             'projectId': null,
             'deviceId': null,
             'userId': null,
+            'region': null,
           };
         }
         return null;
@@ -87,6 +90,7 @@ void main() {
           jsonDecode(jsonString) as Map<String, dynamic>;
       expect(payload['projectId'], isNull);
       expect(payload['deviceId'], isNull);
+      expect(payload['region'], isNull);
       expect(payload['userId'], isNull);
       expect(payload['platform'], anyOf(equals('ios'), equals('android')));
     });

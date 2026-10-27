@@ -67,7 +67,9 @@ public class FlareLaneFlutterPlugin implements FlutterPlugin, MethodCallHandler 
         final HashMap<String, Object> args = call.arguments();
         final String projectId = String.valueOf(args.get("projectId"));
         final Boolean requestPermissionOnLaunch = args.get("requestPermissionOnLaunch") instanceof Boolean ? (Boolean) args.get("requestPermissionOnLaunch") : false;
-        FlareLane.initWithContext(mContext, projectId, requestPermissionOnLaunch);
+        // Dart null stays null (= "us"); validation is the native SDK's job.
+        final String region = args.get("region") instanceof String ? (String) args.get("region") : null;
+        FlareLane.initWithContext(mContext, projectId, region, requestPermissionOnLaunch);
         result.success(true);
       } else if (call.method.equals("setLogLevel")) {
         final int intLogLevel = call.arguments();
@@ -167,6 +169,7 @@ public class FlareLaneFlutterPlugin implements FlutterPlugin, MethodCallHandler 
           payload.put("projectId", FlareLane.getProjectId(mContext));
           payload.put("deviceId", FlareLane.getDeviceId(mContext));
           payload.put("userId", FlareLane.getUserId(mContext));
+          payload.put("region", FlareLane.getRegion(mContext));
         } catch (Exception e) {
           // The Dart catch never sees this failure (the null payload returns as success),
           // so it is logged here — same as every released version.
@@ -174,6 +177,7 @@ public class FlareLaneFlutterPlugin implements FlutterPlugin, MethodCallHandler 
           payload.put("projectId", null);
           payload.put("deviceId", null);
           payload.put("userId", null);
+          payload.put("region", null);
         }
         result.success(payload);
       } else {
