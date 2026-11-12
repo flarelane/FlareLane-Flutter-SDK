@@ -47,7 +47,7 @@ public class FlareLaneFlutterPlugin implements FlutterPlugin, MethodCallHandler 
     channel.setMethodCallHandler(this);
 
     FlareLane.SdkInfo.type = SdkType.FLUTTER;
-    FlareLane.SdkInfo.version = "1.11.2";
+    FlareLane.SdkInfo.version = "1.12.0";
   }
 
   /**

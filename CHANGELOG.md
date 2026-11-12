@@ -1,3 +1,10 @@
+## 1.12.0
+
+- Add an optional `region` parameter to `initialize` for projects created in the Seoul region: `FlareLane.shared.initialize(projectId, region: 'kr')`. Omitting it keeps the default `"us"` region.
+- Bump native FlareLane Android/iOS SDKs to 1.12.0, which route all requests to the project's region and reject a malformed region at initialization. Apps with a Notification Service Extension must pin `FlareLane` 1.12.0 in that target's Podfile entry too.
+- The hybrid WebView bridge passes the native region to the Web SDK.
+- The Android plugin now reports SDK version 1.12.0 (1.11.3 still reported 1.11.2).
+
 ## 1.11.3
 
 - Bump native FlareLane Android/iOS SDKs to 1.11.3: a notification tap now resumes the app's existing task as-is instead of relaunching the main activity (Android), and idempotent POST retries carry an `Idempotency-Key` header.

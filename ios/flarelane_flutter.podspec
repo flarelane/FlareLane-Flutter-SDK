@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'flarelane_flutter'
-  s.version          = '1.11.3'
+  s.version          = '1.12.0'
   s.summary          = 'FlareLane Flutter SDK'
   s.description      = <<-DESC
 FlareLane Flutter SDK
