@@ -91,8 +91,8 @@ class BridgeCore {
           await _channel.invokeMethod<Map>('_webViewSyncPayload');
       final Map<String, dynamic> payload =
           raw?.cast<String, dynamic>() ?? <String, dynamic>{};
-      // Plugin returns projectId/deviceId/userId; platform is filled here so
-      // the native plugin handler stays generic.
+      // Plugin returns projectId/deviceId/userId/region; platform is filled
+      // here so the native plugin handler stays generic.
       payload['platform'] = Platform.isIOS ? 'ios' : 'android';
       return 'FlareLane.syncDeviceDataCallback(${jsonEncode(payload)});';
     } catch (e) {
